@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     #pre-installed
     'rest_framework',
     #user-installed
-    'api',
+    'articles',
     #user-app
 ]
 
