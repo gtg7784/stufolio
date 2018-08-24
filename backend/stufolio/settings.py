@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'stufolio.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'stufolio',
+        'USER': secrets_base['DB_USERNAME'],
+        'PASSWORD': secrets_base['DB_PASS'],
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
