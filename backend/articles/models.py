@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Articles(models.Model):
+class Article(models.Model):
     created = models.DateTimeField(auto_now_add=True, related_name='articles')
     writer = models.ForeignKey(
         'auth.user', related_name='articles', on_delete=models.CASCADE)
