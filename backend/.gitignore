@@ -11,7 +11,7 @@ __pycache__/
 .secrets/
 
 # Database
-*.sqlite3
+migrations/
 
 # Distribution / packaging
 .Python
