@@ -1,10 +1,11 @@
 from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
-from rest_framework import generics, mixins, permissions
+from rest_framework import generics, mixins, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from rest_framework import status, generics
+from rest_framework.decorators import api_view
 
 from articles.models import Article
 from articles.serializers import ArticleSerializer
@@ -31,3 +32,23 @@ class ArticleDetail(generics.RetrieveUpdateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
+
+@api_view(['POST'])
+def article_heart(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article_heart, article_heart_created = article.heart_set.get_or_create(
+        user=request.user)
+    if article_heart_created:
+        return JsonResponse({
+            'like_count': article.count_hearts,
+            'isCreated': True,
+            'username': request.user.username
+        })
+    else:
+        article_heart.delete()
+        return JsonResponse({
+            'like_count': article.count_hearts,
+            'isCreated': False,
+            'username': request.user.username
+        })
