@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #pre-installed
     'rest_framework',
+    'taggit_serializer',
+    'taggit',
     #user-installed
     'article',
     #user-app
