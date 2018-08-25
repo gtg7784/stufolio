@@ -1,4 +1,5 @@
 from django.db import models
+from taggit.managers import TaggableManager
 
 
 class Article(models.Model):
@@ -11,6 +12,8 @@ class Article(models.Model):
         blank=True,
         related_name='heart_user_set',
         through='Heart')  #Article.heart_user_set으로 접근 가능 설정
+
+    tags = TaggableManager()
 
     def __str__(self):  #문자열 표현
         return self.content

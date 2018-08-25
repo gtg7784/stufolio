@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
-from article.models import Article
+from article.models import Article, Heart
 from article.serializers import ArticleSerializer
 
 
@@ -16,12 +16,11 @@ class ArticleList(generics.ListAPIView, APIView):
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
-    def post(self, request, format=None):
+    def post(self, request):
         if request.user.is_authenticated:
             serializer = ArticleSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(writer=request.user)
-                print(request.data)
                 return JsonResponse(
                     serializer.data, status=status.HTTP_201_CREATED)
             return Response(
