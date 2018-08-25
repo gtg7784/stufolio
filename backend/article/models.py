@@ -1,13 +1,10 @@
 from django.db import models
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
 
 
 class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     writer = models.ForeignKey(
-        'auth.user', related_name='articles', on_delete=models.CASCADE)
+        'auth.user', related_name='article', on_delete=models.CASCADE)
     content = models.TextField(null=False, blank=True)
     heart_user_set = models.ManyToManyField(
         'auth.user',

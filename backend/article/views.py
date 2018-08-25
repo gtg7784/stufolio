@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
-from articles.models import Article
-from articles.serializers import ArticleSerializer
+from article.models import Article
+from article.serializers import ArticleSerializer
 
 
 class ArticleList(generics.ListAPIView, APIView):
@@ -21,6 +21,7 @@ class ArticleList(generics.ListAPIView, APIView):
             serializer = ArticleSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(writer=request.user)
+                print(request.data)
                 return JsonResponse(
                     serializer.data, status=status.HTTP_201_CREATED)
             return Response(
@@ -28,10 +29,40 @@ class ArticleList(generics.ListAPIView, APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class ArticleDetail(generics.RetrieveUpdateAPIView):
+class ArticleDetail(generics.RetrieveUpdateAPIView, APIView):
+    def _get_object(self, pk):
+        try:
+            return Article.objects.get(id=pk)
+        except Article.DoesNotExist:
+            raise Http404
+
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
+    def put(self, request, pk):
+        article = self._get_object(pk)
+        serializer = ArticleSerializer(article, data=request.data)
+        if str(getattr(article, 'writer')) == request.user.username:  #인증
+            if serializer.is_valid():
+                serializer.save()
+                print(request.data)
+                return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        article = self._get_object(pk)
+        serializer = ArticleSerializer(article, data=request.data)
+        if str(getattr(article, 'writer')) == request.user.username:  #인증
+            if serializer.is_valid():
+                serializer.save()
+                print(request.data)
+                return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
