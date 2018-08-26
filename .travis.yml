@@ -10,7 +10,7 @@ env:
     - djangorestframework==3.8.2
 
 install:
-    - pip3 install -q Django=$DJANGO_VERSION
+    - pip3 install -q Django==$DJANGO_VERSION
     - pip3 install -q -r requirements.txt
 
 script:
