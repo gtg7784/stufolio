@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'taggit_serializer',
     'taggit',
+    'model_mommy',
     #user-installed
     'article',
     #user-app
