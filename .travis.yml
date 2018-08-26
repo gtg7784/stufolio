@@ -18,8 +18,7 @@ install:
     - pip3 install -q -r requirements.txt
 
 script:
-    - ls -al
-    - ls -al backend/
-    - python3 backend/manage.py makemigrations
-    - python3 backend/manage.py migrate
-    - python3 -m pytest -n 3 --cov-config .coveragerc --cov=backend/
+    - cd backend/
+    - python3 manage.py makemigrations
+    - python3 manage.py migrate
+    - python3 -m pytest
