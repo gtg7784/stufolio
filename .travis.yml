@@ -9,7 +9,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database test_db;' -U postgres
 
 env:
     - Django==2.1
@@ -18,8 +18,8 @@ install:
     - pip3 install -q -r requirements.txt
 
 script:
-    - cd backend/backend
-    - touch problem/secrets.py
-    - python3 manage.py makemigrations
-    - python3 manage.py migrate
+    - ls -al
+    - ls -al backend/
+    - python3 backend/manage.py makemigrations
+    - python3 backend/manage.py migrate
     - python3 -m pytest -n 3 --cov-config .coveragerc --cov=backend/
