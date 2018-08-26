@@ -1,13 +1,12 @@
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
 
-from rest_framework import generics, mixins, permissions, status, generics
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
-from article.models import Article, Heart
+from article.models import Article
 from article.serializers import ArticleSerializer
 
 
@@ -75,10 +74,9 @@ def article_heart(request, pk):
             'isCreated': True,
             'username': request.user.username
         })
-    else:
-        article_heart.delete()
-        return JsonResponse({
-            'like_count': article.count_hearts,
-            'isCreated': False,
-            'username': request.user.username
-        })
+    article_heart.delete()
+    return JsonResponse({
+        'like_count': article.count_hearts,
+        'isCreated': False,
+        'username': request.user.username
+    })

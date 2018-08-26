@@ -1,7 +1,6 @@
-import json
+import os
 
 from django.test import TestCase, Client
-from django.urls import reverse
 from model_mommy import mommy
 from django.contrib.auth.models import User
 
