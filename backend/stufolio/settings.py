@@ -24,7 +24,8 @@ secrets_base = json.loads(open(SECRETS_BASE, 'rt').read())
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secrets_base['SECRET_KEY']
+#SECRET_KEY = secrets_base['SECRET_KEY']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,14 +84,23 @@ WSGI_APPLICATION = 'stufolio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'stufolio',
+#        'USER': secrets_base['DB_USERNAME'],
+#        'PASSWORD': secrets_base['DB_PASS'],
+#        'HOST': 'localhost',
+#        'PORT': '',
+#    }
+#}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stufolio',
-        'USER': secrets_base['DB_USERNAME'],
-        'PASSWORD': secrets_base['DB_PASS'],
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': os.environ['DATABASE_NAME'],
+        'USER': os.environ['DATABASE_USER'],
+        'PASSWORD': os.environ['DATABASE_PASSWORD'],
     }
 }
 
