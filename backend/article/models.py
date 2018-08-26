@@ -1,5 +1,16 @@
 from django.db import models
 from taggit.managers import TaggableManager
+from imagekit.models import ProcessedImageField
+
+from django.contrib.postgres.fields import JSONField
+
+
+class Image(models.Model):
+    #img_id = models.AutoField(primary_key=True)
+    image = ProcessedImageField(
+        upload_to='static/uploaded/images/%Y/%m/%d/',
+        format='JPEG',
+        options={'quality': 70})
 
 
 class Article(models.Model):
@@ -12,6 +23,7 @@ class Article(models.Model):
         blank=True,
         related_name='heart_user_set',
         through='Heart')  #Article.heart_user_set으로 접근 가능 설정
+    images_id = JSONField(blank=False, null=False, default="")
 
     tags = TaggableManager()
 
