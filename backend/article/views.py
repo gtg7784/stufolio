@@ -98,8 +98,12 @@ def get_image_object(pk):
 
 @api_view(['GET'])
 def image(request, pk):
-    directory = str(get_image_object(pk).image)
-    return Response(directory, status=status.HTTP_200_OK)
+    test_file = open(settings.BASE_DIR + "/" + str(get_image_object(pk).image),
+                     'rb')
+    return HttpResponse(
+        content=test_file,
+        content_type="image/jpeg",
+        status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
