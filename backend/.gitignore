@@ -9,6 +9,8 @@ __pycache__/
 
 # Secret Files
 .secrets/
+test.jpg
+static/uploaded/
 
 # Database
 migrations/
