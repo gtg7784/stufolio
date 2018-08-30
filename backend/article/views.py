@@ -1,4 +1,4 @@
-import json, base64
+import json
 
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
