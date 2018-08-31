@@ -62,6 +62,10 @@ class TestArticle(TestCase):
         assert response_obj.get('id') is 4
         #게시글 작성
 
+    def test_user_wrote_article(self):
+        response = self.client.get('/articles/' + self.username + '/')
+        assert response.status_code is 200
+
     def tearDown(self):
         self.user.delete()
         #dt_now = datetime.datetime.now()
