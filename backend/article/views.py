@@ -2,6 +2,7 @@ import json
 
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -123,3 +124,13 @@ def article_heart(request, pk):
         'isCreated': False,
         'username': request.user.username
     })
+
+
+@api_view(['GET'])
+def article_profile(request, string):
+    try:
+        u = User.objects.get(username=string)
+        articles = Article.objects.filter(writer=u).values()
+        return Response(articles, status=status.HTTP_200_OK)
+    except Article.DoesNotExist:
+        raise Http404
