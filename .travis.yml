@@ -19,6 +19,6 @@ install:
 
 script:
     - cd backend/
-    - python3 manage.py makemigrations
+    - python3 manage.py makemigrations article custom_profile
     - python3 manage.py migrate
     - python3 -m pytest
