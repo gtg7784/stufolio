@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'pilkit',
     #user-installed
     'article',
+    'custom_profile'
     #user-app
 ]
 
