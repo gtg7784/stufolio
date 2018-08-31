@@ -31,6 +31,7 @@ pytest-forked==0.2
 pytest-xdist==1.23.0
 pytz==2018.5
 six==1.11.0
+requests==2.19.1
 typed-ast==1.1.0
 wrapt==1.10.11
 yapf==0.22.0
