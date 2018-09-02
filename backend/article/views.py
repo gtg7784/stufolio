@@ -42,7 +42,7 @@ class ArticleList(generics.ListAPIView, APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class ArticleDetail(generics.RetrieveUpdateAPIView, APIView):
+class ArticleDetail(generics.RetrieveAPIView, APIView):
     def _get_object(self, pk):
         try:
             return Article.objects.get(id=pk)
@@ -71,7 +71,6 @@ class ArticleDetail(generics.RetrieveUpdateAPIView, APIView):
         if str(getattr(article, 'writer')) == request.user.username:  #인증
             if serializer.is_valid():
                 serializer.save()
-                print(request.data)
                 return Response(serializer.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -84,23 +83,17 @@ class ImageCreation(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
 
-class ImageDetail(generics.RetrieveDestroyAPIView):
+class ImageDetail(generics.RetrieveUpdateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
 
-def get_image_object(pk):
-    try:
-        return Image.objects.get(id=pk)
-    except Image.DoesNotExist:
-        raise Http404
-
-
 @api_view(['GET'])
 def image(request, pk):
-    test_file = open(settings.BASE_DIR + "/" + str(get_image_object(pk).image),
-                     'rb')
+    test_file = open(
+        settings.BASE_DIR + "/" + str(get_object_or_404(Image, pk=pk).image),
+        'rb')
     return HttpResponse(
         content=test_file,
         content_type="image/jpeg",
