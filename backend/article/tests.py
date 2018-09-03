@@ -49,7 +49,6 @@ class TestArticle(TestCase):
 
         self.image_id = json.loads((response.content).decode("utf-8"))['id']
         assert response.status_code is 201
-        print(self.image_id)
         #이미지 업로드
         params = {
             'content': "testing_view",
