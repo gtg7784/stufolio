@@ -1,8 +1,7 @@
-import os, datetime, pathlib, json
-import requests
+import os, datetime, json, requests
+from model_mommy import mommy
 
 from django.test import TestCase, Client
-from model_mommy import mommy
 from django.contrib.auth.models import User
 
 
@@ -60,6 +59,12 @@ class TestArticle(TestCase):
         response_obj = json.loads((response.content).decode("utf-8"))
         assert response.status_code is 201
         assert response_obj.get('id') is 4
+
+        dt_now = datetime.datetime.now()
+        path_str = 'static/images/' + dt_now.strftime(
+            '%y') + "/" + dt_now.strftime('%m') + "/" + dt_now.strftime(
+                '%d') + "/" + "test.jpg"
+        os.remove(path_str)
         #게시글 작성
 
     def test_user_wrote_article(self):
@@ -68,8 +73,3 @@ class TestArticle(TestCase):
 
     def tearDown(self):
         self.user.delete()
-        #dt_now = datetime.datetime.now()
-        #path_str = 'static/images/' + dt_now.strftime(
-        #    '%y') + "/" + dt_now.strftime('%m') + "/" + dt_now.strftime(
-        #        '%d') + "/" + "test.jpg"
-        #os.remove(path_str)
