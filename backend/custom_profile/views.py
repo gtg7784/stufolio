@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from custom_profile.models import Profile
+from custom_profile.forms import SignUpForm
 from custom_profile.serializers import ProfileSerializer
 
 from stufolio import settings
@@ -50,3 +51,21 @@ def image(request, string):
         content=test_file,
         content_type="image/jpeg",
         status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def sign_up(request):
+    form = SignUpForm(request.POST)
+    if form.is_valid():
+        user = form.save(commit=False)
+        user.save()
+        Profile.objects.create(user=user)
+        return Response(
+            {
+                'account_created': True
+            }, status=status.HTTP_201_CREATED)
+    else:
+        return Response(
+            {
+                'account_created': False
+            }, status=status.HTTP_406_NOT_ACCEPTABLE)
