@@ -18,6 +18,7 @@ class ArticleList(generics.ListAPIView, APIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    # 게시글 리스트 반환 제너릭 설정
 
     def _is_image_available(self, pk):
         try:
@@ -27,12 +28,12 @@ class ArticleList(generics.ListAPIView, APIView):
             return False
 
     def post(self, request):
-        if request.user.is_authenticated:
+        if request.user.is_authenticated: # 사용자가 인증 되었을경우
             serializer = ArticleSerializer(data=request.data)
-            for temp in json.loads(request.data.get('images_id')):
-                if not self._is_image_available(temp):
+            for temp in json.loads(request.data.get('images_id')): # 이미지의 id값들이 유효한지 체크
+                if not self._is_image_available(temp): # 잘못된 id값을 받았을 경우
                     return Response(
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                        status=status.HTTP_406_NOT_ACCEPTABLE)
             if serializer.is_valid():
                 serializer.save(writer=request.user)
                 return JsonResponse(
@@ -52,23 +53,23 @@ class ArticleDetail(generics.RetrieveAPIView, APIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    # 게시글 받아오는 기능 제너릭 설정
 
-    def put(self, request, pk):
+    def put(self, request, pk): # 게시글 수정
         article = self._get_object(pk)
         serializer = ArticleSerializer(article, data=request.data)
-        if str(getattr(article, 'writer')) == request.user.username:  #인증
+        if str(getattr(article, 'writer')) == request.user.username:  # 인증
             if serializer.is_valid():
                 serializer.save()
-                print(request.data)
                 return Response(serializer.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, pk):
+    def patch(self, request, pk):  # 게시글 수정
         article = self._get_object(pk)
         serializer = ArticleSerializer(article, data=request.data)
-        if str(getattr(article, 'writer')) == request.user.username:  #인증
+        if str(getattr(article, 'writer')) == request.user.username:  # 인증
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -81,16 +82,11 @@ class ImageCreation(generics.CreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
-
-
-class ImageDetail(generics.RetrieveUpdateAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    # 이미지 생성 제너릭 설정
 
 
 @api_view(['GET'])
-def image(request, pk):
+def image(request, pk): # 이미지 반환
     test_file = open(
         settings.BASE_DIR + "/" + str(get_object_or_404(Image, pk=pk).image),
         'rb')
@@ -101,7 +97,7 @@ def image(request, pk):
 
 
 @api_view(['POST'])
-def article_heart(request, pk):
+def article_heart(request, pk): # 게시글에 하트 추가
     article = get_object_or_404(Article, pk=pk)
     article_heart, article_heart_created = article.heart_set.get_or_create(
         user=request.user)
@@ -117,10 +113,11 @@ def article_heart(request, pk):
         'isCreated': False,
         'username': request.user.username
     })
+    # 하트가 눌린 게시글의 경우 하트 제거, 하트가 눌리지 않은 게시글의 경우 하트 생성
 
 
 @api_view(['GET'])
-def article_profile(request, string):
+def article_profile(request, string): #유저가 작성한 게시글을 반환
     try:
         u = User.objects.get(username=string)
         articles = Article.objects.filter(writer=u).values()

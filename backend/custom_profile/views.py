@@ -17,7 +17,7 @@ from custom_profile.serializers import ProfileSerializer
 from stufolio import settings
 
 
-class ProfileOverall(APIView):
+class ProfileOverall(APIView):  # 자신의 프로필 수정
     def patch(self, request):
         serializer = ProfileSerializer(request.user.profile, data=request.data)
         if request.user.is_authenticated:
@@ -30,20 +30,19 @@ class ProfileOverall(APIView):
 
 
 class ProfileDetail(APIView):
-    def get(self, request, string):
+    def get(self, request, string):  # 프로필 조회
         user = User.objects.get(username=string)
         profile = user.profile
         return Response(
             {
-                'bio': profile.bio,
-                'school': profile.school,
-                'image': str(profile.image)
+                'bio': profile.bio,  # 상태 메시지
+                'school': profile.school,  # 학교
             },
             status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def image(request, string):
+def image(request, string):  # 프로필 사진 반환
     user = User.objects.get(username=string)
     test_file = open(
         settings.BASE_DIR + "/" + str(
@@ -55,7 +54,7 @@ def image(request, string):
 
 
 @api_view(['POST'])
-def sign_up(request):
+def sign_up(request):  # 회원가입
     form = SignUpForm(request.POST)
     if form.is_valid():
         user = form.save(commit=False)

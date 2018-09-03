@@ -6,7 +6,6 @@ from django.contrib.postgres.fields import JSONField
 
 
 class Image(models.Model):
-    #img_id = models.AutoField(primary_key=True)
     image = ProcessedImageField(
         upload_to='static/uploaded/images/%Y/%m/%d/',
         format='JPEG',
@@ -22,12 +21,14 @@ class Article(models.Model):
         'auth.user',
         blank=True,
         related_name='heart_user_set',
-        through='Heart')  #Article.heart_user_set으로 접근 가능 설정
-    images_id = JSONField(blank=False, null=False, default="")
+        through='Heart')  # Article.heart_user_set으로 접근 가능 설정
+    images_id = JSONField(
+        blank=False, null=False,
+        default="")  # 한 게시글 당 여러 이미지를 저장 하기 위한 JSONField사용
 
     tags = TaggableManager()
 
-    def __str__(self):  #문자열 표현
+    def __str__(self):  # 문자열 표현
         return self.content
 
     @property
