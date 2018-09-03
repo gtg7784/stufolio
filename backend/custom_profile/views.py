@@ -19,12 +19,14 @@ from stufolio import settings
 
 class ProfileOverall(APIView):
     def patch(self, request):
-        serializer = ProfileSerializer(request.user.profile, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated():
+            serializer = ProfileSerializer(
+                request.user.profile, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
