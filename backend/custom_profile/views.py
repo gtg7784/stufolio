@@ -19,9 +19,8 @@ from stufolio import settings
 
 class ProfileOverall(APIView):
     def patch(self, request):
+        serializer = ProfileSerializer(request.user.profile, data=request.data)
         if request.user.is_authenticated:
-            serializer = ProfileSerializer(
-                request.user.profile, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
