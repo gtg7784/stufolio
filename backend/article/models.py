@@ -1,8 +1,7 @@
 from django.db import models
-from taggit.managers import TaggableManager
-from imagekit.models import ProcessedImageField
-
 from django.contrib.postgres.fields import JSONField
+
+from imagekit.models import ProcessedImageField
 
 
 class Image(models.Model):
@@ -25,8 +24,7 @@ class Article(models.Model):
     images_id = JSONField(
         blank=False, null=False,
         default="")  # 한 게시글 당 여러 이미지를 저장 하기 위한 JSONField사용
-
-    tags = TaggableManager()
+    tags = JSONField(default=[])
 
     def __str__(self):  # 문자열 표현
         return self.content
