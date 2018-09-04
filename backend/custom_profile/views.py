@@ -18,9 +18,21 @@ from stufolio import settings
 
 
 class ProfileOverall(APIView):  # 자신의 프로필 수정
-    def patch(self, request):
-        serializer = ProfileSerializer(request.user.profile, data=request.data)
+    def get(self, request):  # 프로필 조회
         if request.user.is_authenticated:
+            profile = request.user.profile
+            return Response(
+                {
+                    'bio': profile.bio,  # 상태 메시지
+                    'school': profile.school,  # 학교
+                },
+                status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def patch(self, request):
+        if request.user.is_authenticated:
+            serializer = ProfileSerializer(
+                request.user.profile, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -64,8 +76,7 @@ def sign_up(request):  # 회원가입
             {
                 'account_created': True
             }, status=status.HTTP_201_CREATED)
-    else:
-        return Response(
-            {
-                'account_created': False
-            }, status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response(
+        {
+            'account_created': False
+        }, status=status.HTTP_406_NOT_ACCEPTABLE)
