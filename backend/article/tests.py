@@ -26,7 +26,7 @@ class TestArticle(TestCase):
         self.client.force_login(user=self.user)
         # 뷰 테스트를 위한 client 객체 생성
 
-    def test_make_article(self):  #DB에 게시글 추가 테스트
+    def test_make_article(self):  # DB에 게시글 추가 테스트
         assert self.article.content is 'testing'
         assert self.article.writer is self.user
         assert self.article.tags is self.tags
