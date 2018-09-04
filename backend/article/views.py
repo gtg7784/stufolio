@@ -18,6 +18,7 @@ class ArticleList(generics.ListAPIView, APIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
     # 게시글 리스트 반환 제너릭 설정
 
     def _is_image_available(self, pk):
@@ -43,39 +44,11 @@ class ArticleList(generics.ListAPIView, APIView):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ArticleDetail(generics.RetrieveAPIView, APIView):
-    def _get_object(self, pk):
-        try:
-            return Article.objects.get(id=pk)
-        except Article.DoesNotExist:
-            raise Http404
-
+class ArticleDetail(generics.RetrieveUpdateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     # 게시글 받아오는 기능 제너릭 설정
-
-    def put(self, request, pk): # 게시글 수정
-        article = self._get_object(pk)
-        serializer = ArticleSerializer(article, data=request.data)
-        if str(getattr(article, 'writer')) == request.user.username:  # 인증
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, pk):  # 게시글 수정
-        article = self._get_object(pk)
-        serializer = ArticleSerializer(article, data=request.data)
-        if str(getattr(article, 'writer')) == request.user.username:  # 인증
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ImageCreation(generics.CreateAPIView):
