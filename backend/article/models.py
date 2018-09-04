@@ -23,8 +23,8 @@ class Article(models.Model):
         through='Heart')  # Article.heart_user_set으로 접근 가능 설정
     images_id = JSONField(
         blank=False, null=False,
-        default="")  # 한 게시글 당 여러 이미지를 저장 하기 위한 JSONField사용
-    tags = JSONField(default=[])
+        default=list)  # 한 게시글 당 여러 이미지를 저장 하기 위한 JSONField사용
+    tags = JSONField(default=list)
 
     def __str__(self):  # 문자열 표현
         return self.content
