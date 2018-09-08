@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -21,7 +20,6 @@ ROOT_DIR = os.path.dirname(BASE_DIR) + "/backend"
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = secrets_base['SECRET_KEY']
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -34,23 +32,26 @@ ALLOWED_HOSTS = []
 APPS_DIRECTORY = "django_apps"
 
 INSTALLED_APPS = [
+    #pre-installed
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #pre-installed
+    #user-installed
     'rest_framework',
     'model_mommy',
     'imagekit',
     'pilkit',
     'webpack_loader',
-    #user-installed
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
+    #user-apps
     APPS_DIRECTORY + '.article',
     APPS_DIRECTORY + '.custom_profile',
     APPS_DIRECTORY + '.search'
-    #user-app
 ]
 
 MIDDLEWARE = [
@@ -65,13 +66,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'stufolio.urls'
 
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.dev.json')
-    }
-}
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -81,30 +75,20 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                #pre-options
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #user-options
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'stufolio.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'stufolio',
-#        'USER': secrets_base['DB_USERNAME'],
-#        'PASSWORD': secrets_base['DB_PASS'],
-#        'HOST': 'localhost',
-#        'PORT': '',
-#    }
-#}
 
 DATABASES = {
     'default': {
@@ -159,3 +143,47 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FB_APP_ID']
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FB_APP_SECRET_CODE']
+
+AUTHENTICATION_BACKENDS = [
+    'stufolio.auth.EmailBackend',
+    'social_core.backends.facebook.FacebookAppOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django-rest-framework-social-oauth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',  # Django가 관리하는 AUTH
+]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.dev.json')
+    }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ),
+}
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+FACEBOOK_EXTENDED_PERMISSIONS = ['email', 'picture']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email, age_range'
+}
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'accounts.social.create_user',  # 덮어쓰기
+    'accounts.social.update_profile_image',  # 추가
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details')

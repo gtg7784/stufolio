@@ -68,15 +68,17 @@ def image(request, string):  # 프로필 사진 반환
 @api_view(['POST'])
 def sign_up(request):  # 회원가입
     form = SignUpForm(request.POST)
-    if form.is_valid():
-        user = form.save(commit=False)
-        user.save()
-        Profile.objects.create(user=user)
+    try:
+        User.objects.get(email=request.POST['email'])
         return Response(
             {
-                'account_created': True
-            }, status=status.HTTP_201_CREATED)
-    return Response(
-        {
-            'account_created': False
-        }, status=status.HTTP_406_NOT_ACCEPTABLE)
+                "email": "해당 이메일은 이미 존재합니다."
+            },
+            status=status.HTTP_406_NOT_ACCEPTABLE)
+    except User.DoesNotExists:  # 이메일이 중복이 아닐경우에
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            Profile.objects.create(user=user)
+            return Response(status=status.HTTP_201_CREATED)
+    return Response(form.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
