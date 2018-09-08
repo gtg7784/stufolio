@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from article.models import Article, Image
+from django_apps.article.models import Article, Image
 
 
 class ArticleSerializer(serializers.ModelSerializer):

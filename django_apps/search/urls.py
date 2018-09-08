@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from search import views
+from django_apps.search import views
 
 urlpatterns = [
     url(r'^profiles/(?P<string>[\w\-]+)/$', views.search_profiles),

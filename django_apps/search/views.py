@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from article.models import Article
+from django_apps.article.models import Article
 
 # Search articles
 # - written by whom,

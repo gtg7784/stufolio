@@ -10,9 +10,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from custom_profile.models import Profile
-from custom_profile.forms import SignUpForm
-from custom_profile.serializers import ProfileSerializer
+from django_apps.custom_profile.models import Profile
+from django_apps.custom_profile.forms import SignUpForm
+from django_apps.custom_profile.serializers import ProfileSerializer
 
 from stufolio import settings
 

@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+APPS_DIRECTORY = "django_apps"
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,9 +48,9 @@ INSTALLED_APPS = [
     'imagekit',
     'pilkit',
     #user-installed
-    'article',
-    'custom_profile',
-    'search'
+    APPS_DIRECTORY+'.article',
+    APPS_DIRECTORY+'.custom_profile',
+    APPS_DIRECTORY+'.search'
     #user-app
 ]
 

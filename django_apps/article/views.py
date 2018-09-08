@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
-from article.models import Article, Image
-from article.serializers import ArticleSerializer, ImageSerializer
+from django_apps.article.models import Article, Image
+from django_apps.article.serializers import ArticleSerializer, ImageSerializer
 from stufolio import settings
 
 
