@@ -42,15 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #pre-installed
     'rest_framework',
-    'taggit_serializer',
-    'taggit',
     'model_mommy',
     'imagekit',
     'pilkit',
     #user-installed
-    APPS_DIRECTORY+'.article',
-    APPS_DIRECTORY+'.custom_profile',
-    APPS_DIRECTORY+'.search'
+    APPS_DIRECTORY + '.article',
+    APPS_DIRECTORY + '.custom_profile',
+    APPS_DIRECTORY + '.search'
     #user-app
 ]
 
