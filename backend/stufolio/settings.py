@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'model_mommy',
     'imagekit',
     'pilkit',
+    'webpack_loader',
     #user-installed
     APPS_DIRECTORY + '.article',
     APPS_DIRECTORY + '.custom_profile',
@@ -64,10 +65,19 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'stufolio.urls'
 
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.dev.json')
+    }
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
