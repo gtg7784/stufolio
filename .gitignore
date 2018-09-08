@@ -65,3 +65,5 @@ docs/_build/
 
 # PyBuilder
 target/
+
+stufolio_venv/lib64
