@@ -10,8 +10,9 @@ class TestArticle(TestCase):
     def setUp(self):
         self.username = 'for_testing_user'
         self.password = 'for_the_test'
+        self.email = 'test_account@testsomething.nothing'
         self.user = User.objects.create(
-            username=self.username, password=self.password)
+            username=self.username, email=self.email, password=self.password)
         # 계정 설정
 
         self.tags = ["tagging", "test"]
@@ -21,9 +22,9 @@ class TestArticle(TestCase):
             user=self.user)[0]
         self.image_id = int()
         # 객체 생성
-
         self.client = Client()
-        self.client.force_login(user=self.user)
+        from django.contrib.auth.backends import ModelBackend
+        self.client.force_login(user=self.user,backend='django.contrib.auth.backends.ModelBackend')
         # 뷰 테스트를 위한 client 객체 생성
 
     def test_make_article(self):  # DB에 게시글 추가 테스트
@@ -48,10 +49,9 @@ class TestArticle(TestCase):
                     if not buffer:
                         break
                     file.write(buffer)
-
         with open('test.jpg', 'rb') as file:
-            response = self.client.post('/api/articles/images/', {"image": file})
-
+            response = self.client.post('/api/articles/images/',
+                                        {"image": file})
         self.image_id = json.loads((response.content).decode("utf-8"))['id']
         assert response.status_code is 201
         #이미지를 서버에 업로드
@@ -67,7 +67,7 @@ class TestArticle(TestCase):
         #게시글 작성
 
     def test_user_wrote_article(self):  # 유저가 작성한 게시글 테스트
-        response = self.client.get('/api/articles/' + self.username + '/')
+        response = self.client.get('/api/articles/user/' + self.username + '/')
         assert response.status_code is 200
 
     def tearDown(self):
