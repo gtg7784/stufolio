@@ -1,25 +1,33 @@
 from django.http import HttpResponse
 
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.forms import PasswordChangeForm
+from django_apps.custom_profile.forms import SignUpForm
+from django_apps.custom_profile.models import Profile
+from django_apps.custom_profile.serializers import ProfileSerializer
+
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django_apps.custom_profile.forms import SignUpForm
-from django_apps.custom_profile.models import Profile
-from django_apps.custom_profile.serializers import ProfileSerializer
 from stufolio import settings
 
 
 class ProfileOverall(APIView):  # 자신의 프로필 수정
     def get(self, request):  # 프로필 조회
         if request.user.is_authenticated:
-            profile = request.user.profile
+            try:
+                profile = Profile.objects.get(user=request.user)
+            except:
+                Profile.objects.create(user=request.user)
+                profile = Profile.objects.get(user=request.user)
             return Response(
                 {
+                    'username': request.user.username,
                     'bio': profile.bio,  # 상태 메시지
                     'school': profile.school,  # 학교
                 },
@@ -28,20 +36,35 @@ class ProfileOverall(APIView):  # 자신의 프로필 수정
 
     def patch(self, request):
         if request.user.is_authenticated:
-            serializer = ProfileSerializer(
-                request.user.profile, data=request.data)
+            try:
+                profile = Profile.objects.get(user=request.user)
+            except:
+                Profile.objects.create(user=request.user)
+                profile = Profile.objects.get(user=request.user)
+            serializer = ProfileSerializer(profile, data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data)
+                profile = Profile.objects.get(user=request.user)
+                return Response(
+                    {
+                        'username': request.user.username,
+                        'bio': profile.bio,  # 상태 메시지
+                        'school': profile.school,  # 학교
+                    },
+                    status=status.HTTP_200_OK)
             return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ProfileDetail(APIView):
     def get(self, request, string):  # 프로필 조회
         user = User.objects.get(username=string)
-        profile = user.profile
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except:
+            Profile.objects.create(user=request.user)
+            profile = Profile.objects.get(user=request.user)
         return Response(
             {
                 'bio': profile.bio,  # 상태 메시지
