@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #user-installed
     'rest_framework',
+    'rest_framework.authtoken',
     'model_mommy',
     'imagekit',
     'pilkit',
@@ -148,10 +149,10 @@ SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FB_APP_ID']
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FB_APP_SECRET_CODE']
 
 AUTHENTICATION_BACKENDS = [
-    #'stufolio.auth.EmailBackend',  # 이메일 Auth
-    #'social_core.backends.facebook.FacebookAppOAuth2',
-    #'social_core.backends.facebook.FacebookOAuth2',
-    #'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'stufolio.auth.EmailBackend',  # 이메일 Auth
+    'social_core.backends.facebook.FacebookAppOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',  # Django가 관리하는 AUTH
 ]
 
@@ -165,8 +166,8 @@ WEBPACK_LOADER = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),

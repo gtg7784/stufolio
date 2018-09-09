@@ -1,19 +1,16 @@
-import json
-
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-
-from rest_framework import generics, permissions, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from django_apps.custom_profile.models import Profile
 from django_apps.custom_profile.forms import SignUpForm
+from django_apps.custom_profile.models import Profile
 from django_apps.custom_profile.serializers import ProfileSerializer
-
 from stufolio import settings
 
 
@@ -80,5 +77,6 @@ def sign_up(request):  # 회원가입
             user = form.save(commit=False)
             user.save()
             Profile.objects.create(user=user)
+            Token.objects.create(user=user)
             return Response(status=status.HTTP_201_CREATED)
     return Response(form.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
