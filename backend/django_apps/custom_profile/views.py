@@ -75,7 +75,7 @@ def sign_up(request):  # 회원가입
                 "email": "해당 이메일은 이미 존재합니다."
             },
             status=status.HTTP_406_NOT_ACCEPTABLE)
-    except User.DoesNotExists:  # 이메일이 중복이 아닐경우에
+    except User.DoesNotExist:  # 이메일이 중복이 아닐경우에
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
