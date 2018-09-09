@@ -21,7 +21,7 @@ class TestProfile(TestCase):
         }
         params = urlencode(params, quote_via=quote_plus)
         response = self.client.post(
-            '/profiles/signup/',
+            '/api/profiles/signup/',
             data=params,
             content_type="application/x-www-form-urlencoded"
         )  # 회원가입 form은 url encoding 된 형식만 받으므로 추가 작업

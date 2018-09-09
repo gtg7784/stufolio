@@ -50,7 +50,7 @@ class TestArticle(TestCase):
                     file.write(buffer)
 
         with open('test.jpg', 'rb') as file:
-            response = self.client.post('/articles/images/', {"image": file})
+            response = self.client.post('/api/articles/images/', {"image": file})
 
         self.image_id = json.loads((response.content).decode("utf-8"))['id']
         assert response.status_code is 201
@@ -60,14 +60,14 @@ class TestArticle(TestCase):
             'tags': '["test_tag"]',
             'images_id': "[" + str(self.image_id) + "]"
         }
-        response = self.client.post('/articles/', params)
+        response = self.client.post('/api/articles/', params)
         response_obj = json.loads((response.content).decode("utf-8"))
         assert response.status_code is 201
         assert response_obj.get('id') is 4
         #게시글 작성
 
     def test_user_wrote_article(self):  # 유저가 작성한 게시글 테스트
-        response = self.client.get('/articles/' + self.username + '/')
+        response = self.client.get('/api/articles/' + self.username + '/')
         assert response.status_code is 200
 
     def tearDown(self):
