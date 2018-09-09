@@ -40,7 +40,6 @@ def search_tags(request, string):
         article['content'] = temp.content
         article['images_id'] = temp.images_id  # images_id 필드 자체로 배열
         article['tags'] = temp.tags  # 태그 추가
-        print(article)
         result.get('articles').append(article)
 
     return Response(result, status=status.HTTP_200_OK)
