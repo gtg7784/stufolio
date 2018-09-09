@@ -80,3 +80,18 @@ def sign_up(request):  # 회원가입
             Token.objects.create(user=user)
             return Response(status=status.HTTP_201_CREATED)
     return Response(form.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+@api_view(['POST'])
+def change_username(request):
+    if request.user.is_authenticated:
+        newusername = request.POST['username']
+        if User.objects.filter(username=newusername).exists():
+            return Response({"username": "해당 사용자 이름은 이미 존재합니다."})
+        request.user.username = newusername
+        request.user.save()
+        return Response(
+            {
+                "new_username": request.user.username
+            }, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
