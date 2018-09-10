@@ -15,19 +15,20 @@ from django_apps.article.models import Article
 
 
 @api_view(['GET'])
-def search_profiles(request, string):
+def search_profiles(request, string, pk):
     user = User.objects.filter(username__contains=string)
     result = []
-    for temp in user.values('username'):
+    for temp in user.values('username')[int(pk) * 10 - 10:int(pk) * 10]:
         result += [temp]
 
     return Response(result, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def search_tags(request, string):
+def search_tags(request, string, pk):
     result = {'articles': []}
-    for temp in Article.objects.filter(tags__contains=[string]):
+    for temp in Article.objects.filter(
+            tags__contains=[string])[int(pk) * 10 - 10:int(pk) * 10]:
         article = {
             'id': int(),
             'writer': str(),
