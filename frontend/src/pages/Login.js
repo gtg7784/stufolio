@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { SignIn } from "components";
-import { URL } from "config";
-import queryString from "query-string";
+import { loginRequest, socialLoginSave } from "modules/account";
 
 class Login extends Component {
     state = {
@@ -31,28 +30,32 @@ class Login extends Component {
             )
             .then(() => {
                 if (this.props.store.login.status === "SUCCESS") {
+                    alert("success");
                     let loginData = {
                         isLoggedIn: true
                     };
                     document.cookie = "key=" + btoa(JSON.stringify(loginData));
-                    this.props.history.push("/articles");
                     return true;
                 } else {
-                    //fail
-                    this.showWarning();
                     return false;
                 }
             });
+    };
+    handleSocialLogin = data => {
+        socialLoginSave("");
+        console.log("Bearer facebook " + data.tokenDetail.accessToken);
+        console.log(this.props.store.status.auth);
     };
 
     render() {
         return (
             <div>
                 <SignIn
-                    onSubmit={this.login}
+                    onSubmit={this.handleLogin}
                     onIdChange={this.handleInputId}
                     onPasswordChange={this.handleInputPassword}
                     facebookAppId={2155704744643770}
+                    onFacebookResponse={this.handleSocialLogin}
                 />
             </div>
         );
@@ -69,6 +72,9 @@ const mapDispatchToProps = dispatch => {
     return {
         loginRequest: (id, pw) => {
             return dispatch(loginRequest(id, pw));
+        },
+        socialLoginSave: bearer => {
+            return dispatch(socialLoginSave(bearer));
         }
     };
 };

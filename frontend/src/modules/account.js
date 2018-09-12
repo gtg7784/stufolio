@@ -10,21 +10,24 @@ export const AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE";
 export function loginRequest(username, password) {
     return dispatch => {
         dispatch(login());
-        return fetch(URL + "/token-auth/", {
+        return fetch(URL + "token-auth/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: "username=" + username + "&password=" + password
-        })
-            .then(response => response.json())
-            .then(json => {
-                if (json.token !== undefined) {
-                    dispatch(loginSuccess(json));
-                } else {
-                    dispatch(loginFailure(json));
-                }
-            });
+        }).then(response => {
+            if (response.status === 200) {
+                const json = response.json();
+                const tokenData = { auth: "Token " + json.token };
+                dispatch(loginSuccess(tokenData)); // where token saves
+            }
+        });
+    };
+}
+export function socialLoginSave(bearer) {
+    return dispatch => {
+        return dispatch(loginSuccess(bearer));
     };
 }
 export function login() {
@@ -75,7 +78,7 @@ function reducer(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: { $set: false },
-                    token: { $set: "" }
+                    auth: { $set: "" }
                 }
             });
         case AUTH_LOGIN_SUCCESS:
@@ -85,7 +88,7 @@ function reducer(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: { $set: true },
-                    token: { $set: action.data.token }
+                    auth: { $set: action.data.auth }
                 }
             });
         case AUTH_LOGIN_FAILURE:
