@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^api/profiles/', include('django_apps.custom_profile.urls')),
     url(r'^api/search/', include('django_apps.search.urls'))
 ]
+
+
 urlpatterns = format_suffix_patterns(urlpatterns)
 urlpatterns = urlpatterns + [
     url(r'^api/auth/', include('rest_framework_social_oauth2.urls')),
