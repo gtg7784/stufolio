@@ -27,7 +27,8 @@ export function loginRequest(username, password) {
 }
 export function socialLoginSave(bearer) {
     return dispatch => {
-        return dispatch(loginSuccess(bearer));
+        const tokenData = { auth: bearer };
+        dispatch(loginSuccess(tokenData));
     };
 }
 export function login() {
