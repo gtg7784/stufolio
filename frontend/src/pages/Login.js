@@ -42,9 +42,9 @@ class Login extends Component {
             });
     };
     handleSocialLogin = data => {
-        socialLoginSave("");
-        console.log("Bearer facebook " + data.tokenDetail.accessToken);
-        console.log(this.props.store.status.auth);
+        this.props.socialLoginSave(
+            "Bearer facebook " + data.tokenDetail.accessToken
+        );
     };
 
     render() {
