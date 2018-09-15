@@ -35,45 +35,48 @@ class Upload extends Component {
         });
     };
     setImageDone = () => {
-        console.log(this.props);
-        var images_id = [];
-        var tags = [];
-        Array.from(this.state.tags.split(",")).forEach(target => {
-            tags.push(target.replace(" ", ""));
-        });
-        var i = 0;
-        Array.from(this.state.images).forEach(pic => {
-            let formData = new FormData();
-            formData.append("image", pic);
-            console.log(this.props.store);
-            fetch(API_URL + "articles/images/", {
-                method: "POST",
-                headers: {
-                    Authorization: this.props.store.status.auth
-                },
-                body: formData
-            })
-                .then(response => response.json())
-                .then(json => {
-                    images_id.push(json.id);
-                    i++;
+        if (this.state.images !== undefined) {
+            var images_id = [];
+            var tags = [];
+            Array.from(this.state.tags.split(",")).forEach(target => {
+                tags.push(target.replace(" ", ""));
+            });
+            var i = 0;
+            Array.from(this.state.images).forEach(pic => {
+                let formData = new FormData();
+                formData.append("image", pic);
+                console.log(this.props.store);
+                fetch(API_URL + "articles/images/", {
+                    method: "POST",
+                    headers: {
+                        Authorization: this.props.store.status.auth
+                    },
+                    body: formData
                 })
-                .then(() => {
-                    let formData = new FormData();
-                    formData.append("images_id", JSON.stringify(images_id));
-                    formData.append("tags", JSON.stringify(tags));
-                    formData.append("content", "");
-                    if (i === this.state.images.length) {
-                        fetch(API_URL + "articles/", {
-                            method: "POST",
-                            headers: {
-                                Authorization: this.props.store.status.auth
-                            },
-                            body: formData
-                        });
-                    }
-                });
-        });
+                    .then(response => response.json())
+                    .then(json => {
+                        images_id.push(json.id);
+                        i++;
+                    })
+                    .then(() => {
+                        let formData = new FormData();
+                        formData.append("images_id", JSON.stringify(images_id));
+                        formData.append("tags", JSON.stringify(tags));
+                        formData.append("content", "");
+                        if (i === this.state.images.length) {
+                            fetch(API_URL + "articles/", {
+                                method: "POST",
+                                headers: {
+                                    Authorization: this.props.store.status.auth
+                                },
+                                body: formData
+                            }).then(() => {
+                                this.props.history.push("/");
+                            });
+                        }
+                    });
+            });
+        }
     };
 
     render() {

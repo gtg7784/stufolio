@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Home, Login, Register } from "pages";
+import { Home, Login, Register, Upload } from "pages";
 import { Provider } from "react-redux";
 import PropTypes from "prop-types";
 import { PersistGate } from "redux-persist/integration/react";
@@ -14,6 +14,7 @@ const Root = ({ store, persistor }) => {
                         <Route exact path="/" component={Home} />
                         <Route exact path="/login/" component={Login} />
                         <Route exact path="/register/" component={Register} />
+                        <Route exact path="/upload/" component={Upload} />
                     </Switch>
                 </BrowserRouter>
             </PersistGate>
