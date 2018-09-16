@@ -8,20 +8,29 @@ import { URL } from "config";
 import "pages/Home.css";
 
 class Home extends Component {
-    constructor(props) {
-        super(props);
-        console.log(this.props);
-    }
-
     moveToUploadPage = () => {
         this.props.history.push("/upload/");
+    };
+    moveToMyArticlesPage = () => {
+        this.props.history.push(
+            "/articles/" + this.props.store.status.username
+        );
     };
     render() {
         return (
             <div>
                 <div>
-                    <Icon name="list" color="black" size="big" />
-                    <Icon name="search" color="black" size="big" />
+                    <Button
+                        inverted
+                        icon
+                        size="big"
+                        onClick={this.moveToMyArticlesPage}
+                    >
+                        <Icon color="black" name="list" />
+                    </Button>
+                    <Button inverted icon size="big">
+                        <Icon color="black" name="search" />
+                    </Button>
                 </div>
                 <div>
                     <Profile
