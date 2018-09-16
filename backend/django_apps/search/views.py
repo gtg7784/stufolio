@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from django_apps.article.models import Article
+from django_apps.article.serializers import ArticleSerializer
 
 # Search articles
 # - written by whom,
@@ -26,21 +27,9 @@ def search_profiles(request, string, pk):
 
 @api_view(['GET'])
 def search_tags(request, string, pk):
-    result = {'articles': []}
-    for temp in Article.objects.filter(
-            tags__contains=[string])[int(pk) * 10 - 10:int(pk) * 10]:
-        article = {
-            'id': int(),
-            'writer': str(),
-            'content': str(),
-            'images_id': list(),
-            'tags': list()
-        }
-        article['id'] = temp.id
-        article['writer'] = temp.writer.username
-        article['content'] = temp.content
-        article['images_id'] = temp.images_id  # images_id 필드 자체로 배열
-        article['tags'] = temp.tags  # 태그 추가
-        result.get('articles').append(article)
+    articles = Article.objects.filter(tags__contains=[string])
+    serializer = ArticleSerializer(articles, many=True)
 
-    return Response(result, status=status.HTTP_200_OK)
+    return Response(
+        serializer.data[int(pk) * 10 - 10:int(pk) * 10],
+        status=status.HTTP_200_OK)
