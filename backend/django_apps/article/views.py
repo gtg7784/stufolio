@@ -105,3 +105,13 @@ def article_profile(request, string):  #유저가 작성한 게시글을 반환
         return Response(articles, status=status.HTTP_200_OK)
     except Article.DoesNotExist:
         raise Http404
+
+
+@api_view(['GET'])
+def article_profile_page(request, string, pk):  #유저가 작성한 게시글을 반환
+    try:
+        u = User.objects.get(username=string)
+        articles = Article.objects.filter(writer=u).values()
+        return Response(articles[int(pk) * 10 - 10:int(pk) * 10])
+    except Article.DoesNotExist:
+        raise Http404
