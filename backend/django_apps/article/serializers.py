@@ -8,8 +8,8 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'content', 'writer', 'heart_user_set', 'tags',
-                  'images_id')
+        fields = ('id', 'created_at', 'content', 'writer', 'heart_user_set',
+                  'tags', 'images_id')
 
 
 class ImageSerializer(serializers.ModelSerializer):
