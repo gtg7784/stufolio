@@ -1,10 +1,18 @@
 import React, { Component } from "react";
-import { Profile } from "components";
+import { connect } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
+
+import { Profile } from "components";
+import { URL } from "config";
 
 import "pages/Home.css";
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        console.log(this.props);
+    }
+
     moveToUploadPage = () => {
         this.props.history.push("/upload/");
     };
@@ -16,7 +24,15 @@ class Home extends Component {
                     <Icon name="search" color="black" size="big" />
                 </div>
                 <div>
-                    <Profile username={"something"} />
+                    <Profile
+                        username={this.props.store.status.username}
+                        img_source={
+                            URL +
+                            "profiles/image/" +
+                            this.props.store.status.username +
+                            "/"
+                        }
+                    />
                     <Button size="huge" onClick={this.moveToUploadPage}>
                         업로드
                     </Button>
@@ -26,4 +42,9 @@ class Home extends Component {
     }
 }
 
-export default Home;
+const mapStateToProps = state => {
+    return {
+        store: state
+    };
+};
+export default connect(mapStateToProps)(Home);
