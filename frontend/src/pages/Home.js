@@ -16,10 +16,7 @@ class Home extends Component {
                     <Icon name="search" color="black" size="big" />
                 </div>
                 <div>
-                    <Profile
-                        img_source="https://images.pexels.com/photos/39853/woman-girl-freedom-happy-39853.jpeg?auto=compress&cs=tinysrgb&dpr=2"
-                        username={"something"}
-                    />
+                    <Profile username={"something"} />
                     <Button size="huge" onClick={this.moveToUploadPage}>
                         업로드
                     </Button>
