@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { URL } from "config";
 import { Register as RegisterComponent } from "components";
-
-import { socialLoginSave } from "modules/account";
+import { loginSuccess } from "modules/account";
+import { URL } from "config";
 
 class Register extends Component {
     state = {
@@ -71,11 +70,23 @@ class Register extends Component {
         });
     };
     handleSocialLogin = data => {
-        this.props.socialLoginSave(
-            "Bearer facebook " + data.tokenDetail.accessToken
-        );
+        const token = "Bearer facebook " + data.tokenDetail.accessToken;
+        fetch(URL + "profiles/", {
+            method: "GET",
+            headers: {
+                Authorization: token
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                const tokenData = {
+                    auth: token,
+                    username: json.username
+                };
+                this.props.loginSuccess(tokenData);
+                this.props.history.push("/");
+            });
     };
-
     render() {
         return (
             <div>
@@ -101,8 +112,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        socialLoginSave: bearer => {
-            return dispatch(socialLoginSave(bearer));
+        loginSuccess: data => {
+            return dispatch(loginSuccess(data));
         }
     };
 };
