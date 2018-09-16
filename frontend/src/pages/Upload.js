@@ -88,10 +88,13 @@ class Upload extends Component {
                     placeholder="태그"
                     onChange={this.handleTagChange}
                 />
-                <label htmlFor="uploader" className="ui huge inverted button">
+                <label
+                    htmlFor="uploader"
+                    className="ui huge inverted button icon"
+                >
                     <Icon name="add" color="black" />
                 </label>
-                <Button inverted onClick={this.setImageDone}>
+                <Button icon inverted onClick={this.setImageDone}>
                     <Icon name="check" size="big" color="black" />
                 </Button>
                 {this.state.images_url ? this._renderPictures() : null}
