@@ -1,36 +1,11 @@
 import update from "react-addons-update";
-import { URL } from "config";
-//Actions
+//Action types
 export const AUTH_LOGIN = "AUTH_LOGIN";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
 export const AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS";
 export const AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE";
 
 //Action Creators
-export function loginRequest(username, password) {
-    return dispatch => {
-        dispatch(login());
-        return fetch(URL + "token-auth/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "username=" + username + "&password=" + password
-        }).then(response => {
-            if (response.status === 200) {
-                const json = response.json();
-                const tokenData = { auth: "Token " + json.token };
-                dispatch(loginSuccess(tokenData)); // where token saves
-            }
-        });
-    };
-}
-export function socialLoginSave(bearer) {
-    return dispatch => {
-        const tokenData = { auth: bearer };
-        dispatch(loginSuccess(tokenData));
-    };
-}
 export function login() {
     return {
         type: AUTH_LOGIN
@@ -53,17 +28,19 @@ export function loginFailure() {
     };
 }
 
-//Reducer
+//Initial state
 const initialState = {
     login: {
         status: "INIT"
     },
     status: {
         isLoggedIn: false,
-        auth: ""
+        auth: "",
+        username: ""
     }
 };
 
+//Reducer
 function reducer(state = initialState, action) {
     switch (action.type) {
         case AUTH_LOGIN:
@@ -79,7 +56,8 @@ function reducer(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: { $set: false },
-                    auth: { $set: "" }
+                    auth: { $set: "" },
+                    username: { $set: "" }
                 }
             });
         case AUTH_LOGIN_SUCCESS:
@@ -89,7 +67,8 @@ function reducer(state = initialState, action) {
                 },
                 status: {
                     isLoggedIn: { $set: true },
-                    auth: { $set: action.data.auth }
+                    auth: { $set: action.data.auth },
+                    username: { $set: action.data.username }
                 }
             });
         case AUTH_LOGIN_FAILURE:
