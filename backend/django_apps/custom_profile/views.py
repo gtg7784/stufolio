@@ -76,6 +76,9 @@ class ProfileDetail(APIView):
 @api_view(['GET'])
 def image(request, string):  # 프로필 사진 반환
     user = User.objects.get(username=string)
+    if str(get_object_or_404(Profile, user=user).image) is "" : # 이미지가 없을때
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     test_file = open(
         settings.BASE_DIR + "/" + str(
             get_object_or_404(Profile, user=user).image), 'rb')
