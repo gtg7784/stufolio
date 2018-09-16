@@ -80,21 +80,23 @@ def image(request, pk):  # 이미지 반환
 
 @api_view(['POST'])
 def article_heart(request, pk):  # 게시글에 하트 추가
-    article = get_object_or_404(Article, pk=pk)
-    article_heart, article_heart_created = article.heart_set.get_or_create(
-        user=request.user)
-    if article_heart_created:
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=pk)
+        article_heart, article_heart_created = article.heart_set.get_or_create(
+            user=request.user)
+        if article_heart_created:
+            return JsonResponse({
+                'like_count': article.count_hearts,
+                'isCreated': True,
+                'username': request.user.username
+            })
+        article_heart.delete()
         return JsonResponse({
             'like_count': article.count_hearts,
-            'isCreated': True,
+            'isCreated': False,
             'username': request.user.username
         })
-    article_heart.delete()
-    return JsonResponse({
-        'like_count': article.count_hearts,
-        'isCreated': False,
-        'username': request.user.username
-    })
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
     # 하트가 눌린 게시글의 경우 하트 제거, 하트가 눌리지 않은 게시글의 경우 하트 생성
 
 
