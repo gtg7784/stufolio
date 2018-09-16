@@ -63,7 +63,8 @@ class ImageCreation(generics.CreateAPIView):
 @api_view(['GET'])
 def get_articles_page(request, pk):
     articles = Article.objects.all().order_by('-created_at')
-    return Response(articles.values()[int(pk) * 10 - 10:int(pk) * 10])
+    serializer = ArticleSerializer(articles, many=True)
+    return Response(serializer.data[int(pk) * 10 - 10:int(pk) * 10])
 
 
 @api_view(['GET'])
@@ -101,9 +102,10 @@ def article_heart(request, pk):  # 게시글에 하트 추가
 def article_profile(request, string):  #유저가 작성한 게시글을 반환
     try:
         u = User.objects.get(username=string)
-        articles = Article.objects.filter(writer=u).values()
-        return Response(articles, status=status.HTTP_200_OK)
-    except Article.DoesNotExist:
+        articles = Article.objects.filter(writer=u)
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
         raise Http404
 
 
@@ -111,7 +113,8 @@ def article_profile(request, string):  #유저가 작성한 게시글을 반환
 def article_profile_page(request, string, pk):  #유저가 작성한 게시글을 반환
     try:
         u = User.objects.get(username=string)
-        articles = Article.objects.filter(writer=u).values()
-        return Response(articles[int(pk) * 10 - 10:int(pk) * 10])
+        articles = Article.objects.filter(writer=u)
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data[int(pk) * 10 - 10:int(pk) * 10])
     except Article.DoesNotExist:
         raise Http404
