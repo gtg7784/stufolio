@@ -37,22 +37,16 @@ class Search extends Component {
             const datetime = raw_datetime.split("T");
             const time = datetime[1].split(".")[0];
             const datetimeString = datetime[0] + ", " + time;
-            let isHeart = false;
 
-            if (
-                article.heart_user_set.includes(
-                    this.props.store.status.username
-                )
-            ) {
-                isHeart = true;
-            }
             return (
                 <Article
                     writer={article.writer}
                     tags={article.tags}
                     images_id={article.images_id}
                     date={datetimeString}
-                    isHeart={isHeart}
+                    isHeart={article.heart_user_set.includes(
+                        this.props.store.status.username
+                    )}
                     id={article.id}
                     auth={this.props.store.status.auth}
                 />
