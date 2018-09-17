@@ -16,6 +16,9 @@ class Home extends Component {
             "/articles/" + this.props.store.status.username
         );
     };
+    moveToSearchPage = () => {
+        this.props.history.push("/search/");
+    };
     render() {
         return (
             <div>
@@ -28,7 +31,12 @@ class Home extends Component {
                     >
                         <Icon color="black" name="list" />
                     </Button>
-                    <Button inverted icon size="big">
+                    <Button
+                        inverted
+                        icon
+                        size="big"
+                        onClick={this.moveToSearchPage}
+                    >
                         <Icon color="black" name="search" />
                     </Button>
                 </div>
