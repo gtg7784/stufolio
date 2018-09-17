@@ -7,7 +7,8 @@ import {
     Upload,
     Articles,
     Article,
-    Search
+    Search,
+    Profile
 } from "pages";
 import { Provider } from "react-redux";
 import PropTypes from "prop-types";
@@ -30,6 +31,7 @@ const Root = ({ store, persistor }) => {
                         />
                         <Route exact path="/article/:id" component={Article} />
                         <Route exact path="/search/" component={Search} />
+                        <Route exact path="/users/:user" component={Profile} />
                     </Switch>
                 </BrowserRouter>
             </PersistGate>
