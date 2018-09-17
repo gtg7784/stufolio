@@ -59,12 +59,15 @@ class ProfileOverall(APIView):  # 자신의 프로필 수정
 
 class ProfileDetail(APIView):
     def get(self, request, string):  # 프로필 조회
-        user = User.objects.get(username=string)
         try:
-            profile = Profile.objects.get(user=request.user)
+            user = User.objects.get(username=string)
         except:
-            Profile.objects.create(user=request.user)
-            profile = Profile.objects.get(user=request.user)
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            profile = Profile.objects.get(user=user)
+        except:
+            Profile.objects.create(user=user)
+            profile = Profile.objects.get(user=user)
         return Response(
             {
                 'bio': profile.bio,  # 상태 메시지
@@ -75,8 +78,11 @@ class ProfileDetail(APIView):
 
 @api_view(['GET'])
 def image(request, string):  # 프로필 사진 반환
-    user = User.objects.get(username=string)
-    if str(get_object_or_404(Profile, user=user).image) is "" : # 이미지가 없을때
+    try:
+        user = User.objects.get(username=string)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if str(get_object_or_404(Profile, user=user).image) is "":  # 이미지가 없을때
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     test_file = open(
@@ -111,13 +117,16 @@ def sign_up(request):  # 회원가입
 @api_view(['POST'])
 def change_username(request):
     if request.user.is_authenticated:
-        newusername = request.POST['username']
-        if User.objects.filter(username=newusername).exists():
-            return Response({"username": "해당 사용자 이름은 이미 존재합니다."})
-        request.user.username = newusername
-        request.user.save()
-        return Response(
+        try:
+            newusername = request.POST['username']
+            if User.objects.filter(username=newusername).exists():
+                return Response({"username": "해당 사용자 이름은 이미 존재합니다."})
+            request.user.username = newusername
+            request.user.save()
+            return Response(
             {
                 "new_username": request.user.username
             }, status=status.HTTP_200_OK)
+        except:
+            pass
     return Response(status=status.HTTP_400_BAD_REQUEST)
