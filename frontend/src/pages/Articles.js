@@ -9,7 +9,10 @@ class Articles extends Component {
         allJsonArticles: undefined
     };
     getArticles = () => {
-        fetch(URL + "articles/user/" + this.props.match.params.user + "/", {
+        var username;
+        if (this.props.match === undefined) username = this.props.username;
+        else username = this.props.match.params.user;
+        fetch(URL + "articles/user/" + username + "/", {
             method: "GET"
         })
             .then(response => {
