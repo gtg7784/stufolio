@@ -1,32 +1,39 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import CalendarHeatmap from "react-calendar-heatmap";
+
+import "react-calendar-heatmap/dist/styles.css";
 
 import {
     Profile as ProfileComponent,
     PictureThumbnail,
-    ProfileManager
+    ProfileManager,
+    Article
 } from "components";
 import { logout } from "modules/account";
 import { URL as API_URL } from "config";
-import { Articles } from "pages";
 
 class Profile extends Component {
     state = {
         isUserOwn: false,
+        articlesDateValue: [],
         bio: "",
         school: "",
         image_url: "",
         image: undefined,
         bio_input_value: "",
         school_input_value: "",
-        username_input_value: ""
+        username_input_value: "",
+        allJsonArticles: undefined
     };
     constructor(props) {
         super(props);
-
-        fetch(API_URL + "profiles/" + this.props.match.params.user + "/", {
-            method: "GET"
-        })
+        fetch(
+            API_URL + "articles/user/" + this.props.store.status.username + "/",
+            {
+                method: "GET"
+            }
+        )
             .then(response => {
                 if (response.status === 404) {
                     this.props.history.push("/");
@@ -34,6 +41,20 @@ class Profile extends Component {
                 }
                 return response.json();
             })
+            .then(json => {
+                if (json !== undefined) {
+                    this.setState({
+                        ...this.state,
+                        allJsonArticles: json
+                    });
+                    this.makeDateValues(json);
+                }
+            }); //게시글 목록 받아오기
+
+        fetch(API_URL + "profiles/" + this.props.match.params.user + "/", {
+            method: "GET"
+        })
+            .then(response => response.json())
             .then(json => {
                 if (json !== undefined) {
                     this.setState({
@@ -154,22 +175,92 @@ class Profile extends Component {
             .then(response => response.json())
             .then(json => {
                 // 사용자 이름 변경됨
-                this.props.logout()
-                this.props.history.push('/')
+                this.props.logout();
+                this.props.history.push("/");
             });
-    }
+    };
+
+    makeDateValues = allJsonArticles => {
+        let dateValueArray = [];
+        let countValueArray = [];
+        let i;
+        for (i = 0; i < allJsonArticles.length; i++) {
+            const raw_datetime = allJsonArticles[i].created_at;
+            const datetime = raw_datetime.split("T");
+            // 날짜는 오름차순으로 받음
+            if (dateValueArray[dateValueArray.length - 1] !== datetime[0]) {
+                // 전것과 다르면 새로운 종류이므로 추가
+                countValueArray.push(1);
+                dateValueArray.push(datetime[0]);
+            } else {
+                countValueArray[dateValueArray.length - 1]++;
+            }
+        }
+        let data = [];
+        for (i = 0; i < dateValueArray.length; i++) {
+            data.push({
+                date: dateValueArray[i],
+                count: countValueArray[i]
+            });
+        }
+        this.setState({
+            ...this.state,
+            articlesDateValue: data
+        });
+    };
+    handleClick = value => {
+        if (value !== null) alert(value.date + ": " + value.count + "개");
+    };
 
     render() {
-        return <div>
-                {this.state.isUserOwn ? <ProfileManager onSubmit={this.handleOnSubmit} onUsernameChange={this.handleUsernameInputValueChange} onChangeUsername={this.changeUsername} onImageChange={this.handleImageChange} onBioChange={this.handleBioInputValueChange} onSchoolChange={this.handleSchoolInputValueChange} /> : null}
-                <ProfileComponent username={this.props.match.params.user} img_source={API_URL + "profiles/image/" + this.props.match.params.user + "/"} />
+        var date = new Date();
+        var lastMonth;
+        if (date.getMonth == 1) {
+            lastMonth = date.getFullYear() + "/" + 12 + "/" + date.getDate();
+        } else {
+            lastMonth =
+                date.getFullYear() +
+                "/" +
+                (date.getMonth() - 1) +
+                "/" +
+                (date.getDate() - date.getDay() - 2);
+        }
+        return (
+            <div>
+                {this.state.isUserOwn ? (
+                    <ProfileManager
+                        onSubmit={this.handleOnSubmit}
+                        onUsernameChange={this.handleUsernameInputValueChange}
+                        onChangeUsername={this.onChangeUsername}
+                        onImageChange={this.handleImageChange}
+                        onBioChange={this.handleBioInputValueChange}
+                        onSchoolChange={this.handleSchoolInputValueChange}
+                    />
+                ) : null}
+                <ProfileComponent
+                    username={this.props.match.params.user}
+                    img_source={
+                        API_URL +
+                        "profiles/image/" +
+                        this.props.match.params.user +
+                        "/"
+                    }
+                />
                 {this.state.school}
                 <br />
                 {this.state.bio}
                 <br />
-                <div width="50%">
-                    <CalendarHeatmap
+                <CalendarHeatmap
+                    startDate={new Date(lastMonth)}
+                    endDate={date}
+                    onClick={this.handleClick}
+                    horizontal={false}
+                    values={this.state.articlesDateValue}
+                />
+                <br />
                 {this.state.allJsonArticles ? this._renderArticles() : null}
+            </div>
+        );
     }
 }
 
