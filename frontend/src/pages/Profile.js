@@ -56,6 +56,39 @@ class Profile extends Component {
             />
         );
     };
+    _renderArticles = () => {
+        let i = -1;
+        const articles = this.state.allJsonArticles.map(article => {
+            const raw_datetime = article.created_at;
+            const datetime = raw_datetime.split("T");
+            const time = datetime[1].split(".")[0];
+            const datetimeString = datetime[0] + ", " + time;
+            let isHeart = false;
+
+            if (
+                article.heart_user_set.includes(
+                    this.props.store.status.username
+                )
+            ) {
+                isHeart = true;
+            }
+            i++;
+            return (
+                <Article
+                    key={i}
+                    writer={article.writer}
+                    tags={article.tags}
+                    images_id={article.images_id}
+                    date={datetimeString}
+                    isHeart={isHeart}
+                    id={article.id}
+                    auth={this.props.store.status.auth}
+                />
+            );
+        });
+        return articles;
+    };
+
     handleImageChange = event => {
         let file = event.target.files[0];
         this.setState({
@@ -107,10 +140,10 @@ class Profile extends Component {
             username_input_value: event.target.value
         });
     };
-    changeUsername = event => {
+    onChangeUsername = event => {
         event.preventDefault();
         const formData = new FormData();
-        formData.append("username", this.state.username_input_value)
+        formData.append("username", this.state.username_input_value);
         fetch(API_URL + "profiles/change/username/", {
             method: "POST",
             headers: {
@@ -134,8 +167,9 @@ class Profile extends Component {
                 <br />
                 {this.state.bio}
                 <br />
-                <Articles username={this.props.match.params.user} />
-            </div>;
+                <div width="50%">
+                    <CalendarHeatmap
+                {this.state.allJsonArticles ? this._renderArticles() : null}
     }
 }
 
