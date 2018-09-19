@@ -32,14 +32,16 @@ class Search extends Component {
             });
     };
     renderArticles = () => {
+        let i = -1;
         const articles = this.state.allJsonArticles.map(article => {
             const raw_datetime = article.created_at;
             const datetime = raw_datetime.split("T");
             const time = datetime[1].split(".")[0];
             const datetimeString = datetime[0] + ", " + time;
-
+            i++;
             return (
                 <Article
+                    key={i}
                     writer={article.writer}
                     tags={article.tags}
                     images_id={article.images_id}
@@ -58,13 +60,6 @@ class Search extends Component {
         this.setState({
             ...this.state,
             search_input_value: event.target.value
-        });
-    };
-
-    test = () => {
-        this.setState({
-            ...this.state,
-            isSearching: true
         });
     };
 
