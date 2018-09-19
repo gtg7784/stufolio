@@ -8,29 +8,7 @@ class Articles extends Component {
     state = {
         allJsonArticles: undefined
     };
-    getArticles = () => {
-        var username;
-        if (this.props.match === undefined) username = this.props.username;
-        else username = this.props.match.params.user;
-        fetch(URL + "articles/user/" + username + "/", {
-            method: "GET"
-        })
-            .then(response => {
-                if (response.status === 404) {
-                    this.props.history.push("/");
-                } else {
-                    return response.json();
-                }
-            })
-            .then(json => {
-                this.setState({
-                    ...this.state,
-                    allJsonArticles: json
-                });
-            });
-    };
     _renderArticles = () => {
-        console.log(this.state.allJsonArticles);
         const articles = this.state.allJsonArticles.map(article => {
             const raw_datetime = article.created_at;
             const datetime = raw_datetime.split("T");
@@ -61,7 +39,22 @@ class Articles extends Component {
     };
     constructor(props) {
         super(props);
-        this.getArticles();
+        var username;
+        if (this.props.match === undefined) username = this.props.username;
+        else username = this.props.match.params.user;
+        fetch(URL + "articles/user/" + username + "/", {
+            method: "GET"
+        })
+            .then(response => {
+                if (response.status === 404) {
+                    this.props.history.push("/");
+                } else {
+                    return response.json();
+                }
+            })
+            .then(json => {
+                this.setState({ ...this.state, allJsonArticles: json });
+            });
     }
 
     render() {
