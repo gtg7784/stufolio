@@ -53,11 +53,16 @@ class ArticleDetail(generics.RetrieveUpdateAPIView):
     # 게시글 받아오는 기능 제너릭 설정
 
 
-class ImageCreation(generics.CreateAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
-    # 이미지 생성 제너릭 설정
+@api_view(['POST'])
+def create_image(request):
+    serializer = ImageSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {
+                "id": serializer.data['id']
+            }, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
