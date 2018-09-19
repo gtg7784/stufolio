@@ -70,21 +70,27 @@ class Register extends Component {
         });
     };
     handleSocialLogin = data => {
-        const token = "Bearer facebook " + data.tokenDetail.accessToken;
-        fetch(URL + "profiles/", {
-            method: "GET",
-            headers: {
-                Authorization: token
-            }
-        })
+        const formData = new FormData();
+        formData.append("short_token", data.tokenDetail.accessToken);
+        fetch(URL + "profiles/token/", { method: "POST", body: formData })
             .then(response => response.json())
             .then(json => {
-                const tokenData = {
-                    auth: token,
-                    username: json.username
-                };
-                this.props.loginSuccess(tokenData);
-                this.props.history.push("/");
+                const token = "Bearer facebook " + json;
+                fetch(URL + "profiles/", {
+                    method: "GET",
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                    .then(response => response.json())
+                    .then(json => {
+                        const tokenData = {
+                            auth: token,
+                            username: json.username
+                        };
+                        this.props.loginSuccess(tokenData);
+                        this.props.history.push("/");
+                    });
             });
     };
     render() {
