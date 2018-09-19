@@ -13,10 +13,17 @@ class Upload extends Component {
     };
     _renderPictures = () => {
         var pics = [];
+        let i = 0;
         Array.from(this.state.images_url).forEach(pic => {
             pics.push(
-                <PictureThumbnail picture={pic} size="small" alt="미리보기" />
+                <PictureThumbnail
+                    key={i}
+                    picture={pic}
+                    size="small"
+                    alt="미리보기"
+                />
             );
+            i++;
         });
         return pics;
     };
@@ -45,7 +52,6 @@ class Upload extends Component {
             Array.from(this.state.images).forEach(pic => {
                 let formData = new FormData();
                 formData.append("image", pic);
-                console.log(this.props.store);
                 fetch(API_URL + "articles/images/", {
                     method: "POST",
                     headers: {

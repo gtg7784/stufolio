@@ -9,6 +9,7 @@ class Articles extends Component {
         allJsonArticles: undefined
     };
     _renderArticles = () => {
+        let i = -1;
         const articles = this.state.allJsonArticles.map(article => {
             const raw_datetime = article.created_at;
             const datetime = raw_datetime.split("T");
@@ -23,8 +24,10 @@ class Articles extends Component {
             ) {
                 isHeart = true;
             }
+            i++;
             return (
                 <Article
+                    key={i}
                     writer={article.writer}
                     tags={article.tags}
                     images_id={article.images_id}
