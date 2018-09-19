@@ -5561,6 +5561,12 @@ react-addons-update@^15.6.2:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
 
+react-calendar-heatmap@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/react-calendar-heatmap/-/react-calendar-heatmap-1.7.0.tgz#e6bf32a79c1557962cf68806a89e21aeb16797b8"
+  dependencies:
+    prop-types "^15.6.2"
+
 react-dev-utils@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-5.0.2.tgz#7bb68d2c4f6ffe7ed1184c5b0124fcad692774d2"
