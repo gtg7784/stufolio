@@ -53,7 +53,10 @@ class Articles extends Component {
                 }
             })
             .then(json => {
-                this.setState({ ...this.state, allJsonArticles: json });
+                this.setState({
+                    ...this.state,
+                    allJsonArticles: json.reverse()
+                });
             });
     }
 

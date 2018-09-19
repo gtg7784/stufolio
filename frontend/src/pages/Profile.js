@@ -45,7 +45,7 @@ class Profile extends Component {
                 if (json !== undefined) {
                     this.setState({
                         ...this.state,
-                        allJsonArticles: json
+                        allJsonArticles: json.reverse()
                     });
                     this.makeDateValues(json);
                 }
@@ -215,7 +215,7 @@ class Profile extends Component {
     render() {
         var date = new Date();
         var lastMonth;
-        if (date.getMonth == 1) {
+        if (date.getMonth === 1) {
             lastMonth = date.getFullYear() + "/" + 12 + "/" + date.getDate();
         } else {
             lastMonth =
