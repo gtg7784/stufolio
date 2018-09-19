@@ -1,20 +1,23 @@
+import json
 from django.http import HttpResponse
 
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import ensure_csrf_cookie
+import requests
 from django.contrib.auth.forms import PasswordChangeForm
-from django_apps.custom_profile.forms import SignUpForm
-from django_apps.custom_profile.models import Profile
-from django_apps.custom_profile.serializers import ProfileSerializer
-
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
+from django_apps.custom_profile.forms import SignUpForm
+from django_apps.custom_profile.models import Profile
+from django_apps.custom_profile.serializers import ProfileSerializer
 from stufolio import settings
+from stufolio.settings import SOCIAL_AUTH_FACEBOOK_SECRET
 
 
 class ProfileOverall(APIView):  # 자신의 프로필 수정
@@ -124,9 +127,22 @@ def change_username(request):
             request.user.username = newusername
             request.user.save()
             return Response(
-            {
-                "new_username": request.user.username
-            }, status=status.HTTP_200_OK)
+                {
+                    "new_username": request.user.username
+                },
+                status=status.HTTP_200_OK)
         except:
             pass
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def long_lived_token(request):
+    print(request.data['short_token'])
+    try:
+        url = "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" + settings.SOCIAL_AUTH_FACEBOOK_KEY + "&client_secret=" + SOCIAL_AUTH_FACEBOOK_SECRET + "&fb_exchange_token=" + request.data['short_token']
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response(
+        json.loads(requests.get(url).text)['access_token'],
+        status=status.HTTP_200_OK)
