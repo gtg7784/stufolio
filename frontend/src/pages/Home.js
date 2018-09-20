@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Icon } from "semantic-ui-react";
+import { Button, Icon, Card, Image } from "semantic-ui-react";
 
-import { Profile } from "components";
 import { URL } from "config";
 
-import "pages/Home.css";
+import "pages/Template.css";
 
 class Home extends Component {
     moveToUploadPage = () => {
@@ -25,6 +24,8 @@ class Home extends Component {
                 <div>
                     <Button
                         inverted
+                        floated="left"
+                        right
                         icon
                         size="big"
                         onClick={this.moveToMyArticlesPage}
@@ -33,6 +34,7 @@ class Home extends Component {
                     </Button>
                     <Button
                         inverted
+                        floated="right"
                         icon
                         size="big"
                         onClick={this.moveToSearchPage}
@@ -40,17 +42,29 @@ class Home extends Component {
                         <Icon color="black" name="search" />
                     </Button>
                 </div>
-                <div>
-                    <Profile
-                        username={this.props.store.status.username}
-                        img_source={
-                            URL +
-                            "profiles/image/" +
-                            this.props.store.status.username +
-                            "/"
-                        }
-                    />
-                    <Button size="huge" onClick={this.moveToUploadPage}>
+                <div className="center">
+                    <Card>
+                        <Image
+                            src={
+                                URL +
+                                "profiles/image/" +
+                                this.props.store.status.username +
+                                "/"
+                            }
+                        />
+                        <Card.Content>
+                            <Card.Header>
+                                {this.props.store.status.username}
+                            </Card.Header>
+                        </Card.Content>
+                    </Card>
+                </div>
+                <div className="center">
+                    <Button
+                        color="blue"
+                        size="huge"
+                        onClick={this.moveToUploadPage}
+                    >
                         업로드
                     </Button>
                 </div>
