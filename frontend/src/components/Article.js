@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Button, Icon, Image } from "semantic-ui-react";
+import { Button, Icon, Image, Card } from "semantic-ui-react";
+import "pages/Template.css";
 
 import { URL } from "config";
 
@@ -27,12 +28,7 @@ class Article extends Component {
     };
     renderPictures = images_id => {
         const pictures = images_id.map(picture => {
-            return (
-                <Image
-                    src={URL + "articles/images/" + picture + "/"}
-                    size="small"
-                />
-            );
+            return <Image src={URL + "articles/images/" + picture + "/"} />;
         });
         return pictures;
     };
@@ -57,23 +53,42 @@ class Article extends Component {
 
     render() {
         return (
-            <div>
-                {this.props.images_id
-                    ? this.renderPictures(this.props.images_id)
-                    : null}
-                {this.props.writer}
-                {this.props.tags ? this.renderTags(this.props.tags) : null}
-                <br />
-                {this.props.date}
-                {this.state.isHeart ? (
-                    <Button
-                        icon="heart"
-                        color="red"
-                        onClick={this.onClickHeart}
-                    />
-                ) : (
-                    <Button icon="heart outline" onClick={this.onClickHeart} />
-                )}
+            <div className="center">
+                <Card>
+                    {this.props.images_id
+                        ? this.renderPictures(this.props.images_id)
+                        : null}
+                    <Card.Content>
+                        <Card.Description>
+                            {this.props.tags
+                                ? this.renderTags(this.props.tags)
+                                : null}
+                        </Card.Description>
+                        <Card.Meta>{this.props.writer}</Card.Meta>
+                        <span>
+                            {this.props.date}
+                            {this.state.isHeart ? (
+                                <Button floated="right" inverted icon>
+                                    <Icon
+                                        size="large"
+                                        name="heart"
+                                        color="red"
+                                        onClick={this.onClickHeart}
+                                    />
+                                </Button>
+                            ) : (
+                                <Button floated="right" inverted icon>
+                                    <Icon
+                                        color="black"
+                                        size="large"
+                                        name="heart outline"
+                                        onClick={this.onClickHeart}
+                                    />
+                                </Button>
+                            )}
+                        </span>
+                    </Card.Content>
+                </Card>
             </div>
         );
     }
