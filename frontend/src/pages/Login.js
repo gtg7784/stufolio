@@ -5,6 +5,8 @@ import { SignIn } from "components";
 import { login, loginSuccess } from "modules/account";
 import { URL } from "config";
 
+import "pages/Template.css";
+
 class Login extends Component {
     state = {
         input_value_id: "",
@@ -90,7 +92,7 @@ class Login extends Component {
     };
     render() {
         return (
-            <div>
+            <div className="center">
                 <SignIn
                     onSubmit={this.handleLogin}
                     onIdChange={this.handleInputId}
