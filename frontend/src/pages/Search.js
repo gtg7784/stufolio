@@ -76,22 +76,24 @@ class Search extends Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.searchArticles}>
-                    <Input
-                        type="text"
-                        placeholder="검색"
-                        onChange={this.handleSearchText}
-                    />
-                    {this.state.isSearching ? (
-                        <Button icon>
-                            <Loader size="tiny" active inline />
-                        </Button>
-                    ) : (
-                        <Button icon type="submit">
-                            <Icon name="search" />
-                        </Button>
-                    )}
-                </form>
+                <div className="center">
+                    <form onSubmit={this.searchArticles}>
+                        <Input
+                            type="text"
+                            placeholder="검색"
+                            onChange={this.handleSearchText}
+                        />
+                        {this.state.isSearching ? (
+                            <Button icon>
+                                <Loader size="tiny" active inline />
+                            </Button>
+                        ) : (
+                            <Button icon type="submit">
+                                <Icon name="search" />
+                            </Button>
+                        )}
+                    </form>
+                </div>
                 {this.state.jsxArticle}
             </div>
         );
