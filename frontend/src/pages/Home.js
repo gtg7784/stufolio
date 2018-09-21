@@ -4,9 +4,15 @@ import { Button, Icon, Card, Image } from "semantic-ui-react";
 
 import { URL } from "config";
 
+import { Profile } from "components";
+
 import "pages/Template.css";
 
 class Home extends Component {
+    state = {
+        bio: "",
+        school: ""
+    };
     moveToUploadPage = () => {
         this.props.history.push("/upload/");
     };
@@ -18,55 +24,70 @@ class Home extends Component {
     moveToSearchPage = () => {
         this.props.history.push("/search/");
     };
+    constructor(props) {
+        super(props);
+        fetch(URL + "profiles/" + this.props.store.status.username + "/", {
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json !== undefined) {
+                    this.setState({
+                        ...this.state,
+                        bio: json.bio,
+                        school: json.school
+                    });
+                }
+            });
+    }
     render() {
         return (
-            <div>
+            <div className="center">
                 <div>
-                    <Button
-                        inverted
-                        floated="left"
-                        right
-                        icon
-                        size="big"
-                        onClick={this.moveToMyArticlesPage}
-                    >
-                        <Icon color="black" name="list" />
-                    </Button>
-                    <Button
-                        inverted
-                        floated="right"
-                        icon
-                        size="big"
-                        onClick={this.moveToSearchPage}
-                    >
-                        <Icon color="black" name="search" />
-                    </Button>
-                </div>
-                <div className="center">
-                    <Card>
-                        <Image
-                            src={
+                    <div>
+                        <Button
+                            inverted
+                            floated="left"
+                            right
+                            icon
+                            size="big"
+                            onClick={this.moveToMyArticlesPage}
+                        >
+                            <Icon color="black" name="list" />
+                        </Button>
+                        <Button
+                            inverted
+                            floated="right"
+                            icon
+                            size="big"
+                            onClick={this.moveToSearchPage}
+                        >
+                            <Icon color="black" name="search" />
+                        </Button>
+                    </div>
+                    <div>
+                        <Profile
+                            username={this.props.store.status.username}
+                            img_source={
                                 URL +
                                 "profiles/image/" +
                                 this.props.store.status.username +
                                 "/"
                             }
+                            school={this.state.school}
+                            bio={this.state.bio}
                         />
-                        <Card.Content>
-                            <Card.Header>
-                                {this.props.store.status.username}
-                            </Card.Header>
-                        </Card.Content>
-                    </Card>
-                </div>
-                <div className="center">
-                    <Button
-                        color="blue"
-                        size="huge"
-                        onClick={this.moveToUploadPage}
-                    >
-                        업로드
-                    </Button>
+                    </div>
+                    <div>
+                        <Button
+                            id="upload_button"
+                            color="blue"
+                            size="huge"
+                            onClick={this.moveToUploadPage}
+                        >
+                            업로드
+                        </Button>
+                    </div>
                 </div>
             </div>
         );
