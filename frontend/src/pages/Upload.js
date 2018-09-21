@@ -5,11 +5,17 @@ import { URL as API_URL } from "config";
 import { connect } from "react-redux";
 import "./Upload.css";
 
+import { TransitionablePortal, Segment } from "semantic-ui-react";
+
+import "pages/Template.css";
+
 class Upload extends Component {
     state = {
         images: undefined,
         images_url: [],
-        tags: ""
+        tags: "",
+        popupMessage: "",
+        isOpen: false
     };
     _renderPictures = () => {
         var pics = [];
@@ -76,41 +82,87 @@ class Upload extends Component {
                                     Authorization: this.props.store.status.auth
                                 },
                                 body: formData
-                            }).then(() => {
-                                this.props.history.push("/");
+                            }).then(response => {
+                                if (response.status == 201) {
+                                    this.showPopup(
+                                        <Icon
+                                            size="huge"
+                                            name="check"
+                                            color="green"
+                                        />
+                                    );
+                                    setTimeout(() => {
+                                        this.props.history.push("/");
+                                    }, 2000);
+                                } else {
+                                    this.showPopup(<h1>실패</h1>);
+                                }
                             });
                         }
                     });
             });
         }
     };
+    showPopup = message => {
+        this.setState({
+            ...this.state,
+            isOpen: true,
+            popupMessage: message
+        });
+        setTimeout(() => {
+            this.setState({
+                ...this.state,
+                isOpen: false
+            });
+        }, 2000);
+    };
 
     render() {
         return (
-            <div>
-                <Input
-                    icon="hashtag"
-                    iconPosition="left"
-                    placeholder="태그"
-                    onChange={this.handleTagChange}
-                />
-                <label
-                    htmlFor="uploader"
-                    className="ui huge inverted button icon"
-                >
-                    <Icon name="add" color="black" />
-                </label>
-                <Button icon inverted onClick={this.setImageDone}>
-                    <Icon name="check" size="big" color="black" />
-                </Button>
-                {this.state.images_url ? this._renderPictures() : null}
-                <input
-                    id="uploader"
-                    className="filebox"
-                    multiple
-                    type="file"
-                    onChange={this.handleChange}
-                />
+            <div className="center">
+                <div>
+                    <label
+                        htmlFor="uploader"
+                        className="ui huge inverted button icon left floated"
+                    >
+                        <Icon name="add" color="black" />
+                    </label>
+                    <Button
+                        icon
+                        size="huge"
+                        inverted
+                        floated="right"
+                        onClick={this.setImageDone}
+                    >
+                        <Icon name="check" color="black" />
+                    </Button>
+                    <Input
+                        icon="hashtag"
+                        iconPosition="left"
+                        placeholder="태그"
+                        onChange={this.handleTagChange}
+                    />
+                    {this.state.images_url ? this._renderPictures() : null}
+                    <input
+                        id="uploader"
+                        className="filebox"
+                        multiple
+                        type="file"
+                        onChange={this.handleChange}
+                    />
+                </div>
+                <TransitionablePortal open={this.state.isOpen}>
+                    <Segment
+                        style={{
+                            left: "40%",
+                            position: "fixed",
+                            top: "50%",
+                            zIndex: 1000
+                        }}
+                    >
+                        {this.state.popupMessage}
+                    </Segment>
+                </TransitionablePortal>
             </div>
         );
     }
