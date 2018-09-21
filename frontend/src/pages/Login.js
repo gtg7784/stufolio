@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import { TransitionablePortal, Segment } from "semantic-ui-react";
+
 import { SignIn } from "components";
-import { login, loginSuccess } from "modules/account";
+import { login, loginSuccess, loginFailure } from "modules/account";
 import { URL } from "config";
 
 import "pages/Template.css";
@@ -10,7 +12,22 @@ import "pages/Template.css";
 class Login extends Component {
     state = {
         input_value_id: "",
-        input_value_password: ""
+        input_value_password: "",
+        isOpen: false,
+        popupMessage: ""
+    };
+    showPopup = message => {
+        this.setState({
+            ...this.state,
+            isOpen: true,
+            popupMessage: message
+        });
+        setTimeout(() => {
+            this.setState({
+                ...this.state,
+                isOpen: false
+            });
+        }, 2000);
     };
     handleInputId = event => {
         this.setState({
@@ -61,8 +78,8 @@ class Login extends Component {
                         this.props.history.push("/");
                     });
             } else {
+                this.showPopup("로그인 실패");
                 this.props.loginFailure();
-                return false;
             }
         });
     };
@@ -100,6 +117,18 @@ class Login extends Component {
                     facebookAppId={2155704744643770}
                     onFacebookResponse={this.handleSocialLogin}
                 />
+                <TransitionablePortal open={this.state.isOpen}>
+                    <Segment
+                        style={{
+                            left: "40%",
+                            position: "fixed",
+                            top: "50%",
+                            zIndex: 1000
+                        }}
+                    >
+                        {this.state.popupMessage}
+                    </Segment>
+                </TransitionablePortal>
             </div>
         );
     }
@@ -118,6 +147,9 @@ const mapDispatchToProps = dispatch => {
         },
         loginSuccess: data => {
             return dispatch(loginSuccess(data));
+        },
+        loginFailure: () => {
+            return dispatch(loginFailure());
         }
     };
 };
