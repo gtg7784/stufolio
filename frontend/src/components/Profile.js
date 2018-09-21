@@ -1,15 +1,17 @@
 import React from "react";
-import { Icon } from "semantic-ui-react";
+import { Card, Image } from "semantic-ui-react";
 import "components/Profile.css";
 
-const Profile = ({ img_source, username }) => (
+const Profile = ({ img_source, username, bio, school }) => (
     <div>
-        {img_source ? (
-            <img className="profile_image" src={img_source} alt="프로필 사진" />
-        ) : (
-            <Icon name="user circle" size="massive" />
-        )}
-        <div>{username}</div>
+        <Card>
+            <Image src={img_source} />
+            <Card.Content>
+                <Card.Header>{username}</Card.Header>
+                <Card.Meta>{bio}</Card.Meta>
+                <Card.Meta>{school}</Card.Meta>
+            </Card.Content>
+        </Card>
     </div>
 );
 
