@@ -97,12 +97,13 @@ class Profile extends Component {
             return (
                 <Article
                     key={i}
+                    numOfHearts={article.heart_user_set.length}
                     writer={article.writer}
                     tags={article.tags}
                     images_id={article.images_id}
                     date={datetimeString}
                     isHeart={isHeart}
-                    id={article.id}
+                    article_id={article.id}
                     auth={this.props.store.status.auth}
                 />
             );
@@ -245,11 +246,9 @@ class Profile extends Component {
                         this.props.match.params.user +
                         "/"
                     }
+                    school={this.state.school}
+                    bio={this.state.bio}
                 />
-                {this.state.school}
-                <br />
-                {this.state.bio}
-                <br />
                 <CalendarHeatmap
                     startDate={new Date(lastMonth)}
                     endDate={date}

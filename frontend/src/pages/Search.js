@@ -5,6 +5,8 @@ import { Input, Button, Icon, Loader } from "semantic-ui-react";
 import { Article } from "components";
 import { URL } from "config";
 
+import "pages/Template.css";
+
 class Search extends Component {
     state = {
         allJsonArticles: undefined,
@@ -38,18 +40,26 @@ class Search extends Component {
             const datetime = raw_datetime.split("T");
             const time = datetime[1].split(".")[0];
             const datetimeString = datetime[0] + ", " + time;
+            let isHeart = false;
+
+            if (
+                article.heart_user_set.includes(
+                    this.props.store.status.username
+                )
+            ) {
+                isHeart = true;
+            }
             i++;
             return (
                 <Article
                     key={i}
+                    numOfHearts={article.heart_user_set.length}
                     writer={article.writer}
                     tags={article.tags}
                     images_id={article.images_id}
                     date={datetimeString}
-                    isHeart={article.heart_user_set.includes(
-                        this.props.store.status.username
-                    )}
-                    id={article.id}
+                    isHeart={isHeart}
+                    article_id={article.id}
                     auth={this.props.store.status.auth}
                 />
             );
