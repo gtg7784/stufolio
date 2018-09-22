@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Button, Icon } from "semantic-ui-react";
-import "components/Profile.css";
+import "pages/Template.css";
 
 const Profile = ({
     onSubmit,
@@ -10,7 +10,7 @@ const Profile = ({
     onBioChange,
     onSchoolChange
 }) => (
-    <div>
+    <div className="center">
         <form onSubmit={onChangeUsername}>
             <Input placeholder="사용자 이름" onChange={onUsernameChange} />
             <Button type="submit">변경</Button>
