@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Icon, Card, Image } from "semantic-ui-react";
+import { Button, Icon } from "semantic-ui-react";
 
 import { URL } from "config";
 
@@ -16,16 +16,17 @@ class Home extends Component {
     moveToUploadPage = () => {
         this.props.history.push("/upload/");
     };
-    moveToMyArticlesPage = () => {
-        this.props.history.push(
-            "/articles/" + this.props.store.status.username
-        );
+    moveToMyProfilePage = () => {
+        this.props.history.push("/users/" + this.props.store.status.username);
     };
     moveToSearchPage = () => {
         this.props.history.push("/search/");
     };
     constructor(props) {
         super(props);
+        if (props.store.login.status !== "SUCCESS") {
+            props.history.push("/login");
+        }
         fetch(URL + "profiles/" + this.props.store.status.username + "/", {
             method: "GET"
         })
@@ -48,10 +49,9 @@ class Home extends Component {
                         <Button
                             inverted
                             floated="left"
-                            right
                             icon
                             size="big"
-                            onClick={this.moveToMyArticlesPage}
+                            onClick={this.moveToMyProfilePage}
                         >
                             <Icon color="black" name="list" />
                         </Button>
