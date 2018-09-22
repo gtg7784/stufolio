@@ -8,6 +8,7 @@ import { login, loginSuccess, loginFailure } from "modules/account";
 import { URL } from "config";
 
 import "pages/Template.css";
+import "pages/Login.css";
 
 class Login extends Component {
     state = {
@@ -107,16 +108,24 @@ class Login extends Component {
                     });
             });
     };
+    constructor(props) {
+        super(props);
+        if (props.store.login.status === "SUCCESS") {
+            props.history.push("/");
+        }
+    }
     render() {
         return (
             <div className="center">
-                <SignIn
-                    onSubmit={this.handleLogin}
-                    onIdChange={this.handleInputId}
-                    onPasswordChange={this.handleInputPassword}
-                    facebookAppId={2155704744643770}
-                    onFacebookResponse={this.handleSocialLogin}
-                />
+                <div className="content">
+                    <SignIn
+                        onSubmit={this.handleLogin}
+                        onIdChange={this.handleInputId}
+                        onPasswordChange={this.handleInputPassword}
+                        facebookAppId={2155704744643770}
+                        onFacebookResponse={this.handleSocialLogin}
+                    />
+                </div>
                 <TransitionablePortal open={this.state.isOpen}>
                     <Segment
                         style={{
