@@ -4,6 +4,8 @@ import CalendarHeatmap from "react-calendar-heatmap";
 
 import "react-calendar-heatmap/dist/styles.css";
 
+import "pages/Template.css";
+
 import {
     Profile as ProfileComponent,
     PictureThumbnail,
@@ -115,8 +117,8 @@ class Profile extends Component {
         let file = event.target.files[0];
         this.setState({
             ...this.state,
-            images: file,
-            images_url: URL.createObjectURL(file)
+            image: file,
+            image_url: URL.createObjectURL(file)
         });
     };
     handleBioInputValueChange = event => {
@@ -140,6 +142,7 @@ class Profile extends Component {
             formData.append("bio", this.state.bio_input_value);
         if (this.state.school_input_value !== "")
             formData.append("school", this.state.school_input_value);
+
         fetch(API_URL + "profiles/", {
             method: "PATCH",
             headers: {
@@ -238,17 +241,20 @@ class Profile extends Component {
                         onSchoolChange={this.handleSchoolInputValueChange}
                     />
                 ) : null}
-                <ProfileComponent
-                    username={this.props.match.params.user}
-                    img_source={
-                        API_URL +
-                        "profiles/image/" +
-                        this.props.match.params.user +
-                        "/"
-                    }
-                    school={this.state.school}
-                    bio={this.state.bio}
-                />
+                {this.state._renderPicture}
+                <div className="center">
+                    <ProfileComponent
+                        username={this.props.match.params.user}
+                        img_source={
+                            API_URL +
+                            "profiles/image/" +
+                            this.props.match.params.user +
+                            "/"
+                        }
+                        school={this.state.school}
+                        bio={this.state.bio}
+                    />
+                </div>
                 <CalendarHeatmap
                     startDate={new Date(lastMonth)}
                     endDate={date}
