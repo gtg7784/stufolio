@@ -118,6 +118,12 @@ class Register extends Component {
             });
         }, 2000);
     };
+    constructor(props) {
+        super(props);
+        if (props.store.login.status === "SUCCESS") {
+            props.history.push("/");
+        }
+    }
 
     render() {
         return (

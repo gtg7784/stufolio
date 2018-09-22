@@ -17,6 +17,12 @@ class Upload extends Component {
         popupMessage: "",
         isOpen: false
     };
+    constructor(props) {
+        super(props);
+        if (props.store.login.status !== "SUCCESS") {
+            props.history.push("/login");
+        }
+    }
     _renderPictures = () => {
         var pics = [];
         let i = 0;
@@ -83,7 +89,7 @@ class Upload extends Component {
                                 },
                                 body: formData
                             }).then(response => {
-                                if (response.status == 201) {
+                                if (response.status === 201) {
                                     this.showPopup(
                                         <Icon
                                             size="huge"
