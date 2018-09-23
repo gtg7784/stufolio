@@ -55,34 +55,33 @@ class Login extends Component {
                 this.state.input_value_id +
                 "&password=" +
                 this.state.input_value_password
-        }).then(response => {
-            if (response.status === 200) {
-                const json = response.json();
-                const token = "Token " + json.token;
-                let loginData = {
-                    isLoggedIn: true
-                };
-                document.cookie = "key=" + btoa(JSON.stringify(loginData)); // 쿠키에 저장
-                fetch(URL + "profiles/", {
-                    method: "GET",
-                    headers: {
-                        Authorization: token
-                    }
-                })
-                    .then(response => response.json())
-                    .then(json => {
-                        const tokenData = {
-                            auth: token,
-                            username: json.username
-                        };
-                        this.props.loginSuccess(tokenData);
-                        this.props.history.push("/");
-                    });
-            } else {
-                this.showPopup("로그인 실패");
-                this.props.loginFailure();
-            }
-        });
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.token !== undefined) {
+                    const token = "Token " + json.token;
+                    let loginData = { isLoggedIn: true };
+                    document.cookie = "key=" + btoa(JSON.stringify(loginData)); // 쿠키에 저장
+                    fetch(URL + "profiles/", {
+                        method: "GET",
+                        headers: {
+                            Authorization: token
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(json => {
+                            const tokenData = {
+                                auth: token,
+                                username: json.username
+                            };
+                            this.props.loginSuccess(tokenData);
+                            this.props.history.push("/");
+                        });
+                } else {
+                    this.showPopup("로그인 실패");
+                    this.props.loginFailure();
+                }
+            });
     };
     handleSocialLogin = data => {
         const formData = new FormData();
