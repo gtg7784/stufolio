@@ -3,10 +3,12 @@ import { connect } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
 
 import { URL } from "config";
+import { logout } from "modules/account";
 
 import { Profile } from "components";
 
 import "pages/Template.css";
+import "pages/Home.css";
 
 class Home extends Component {
     state = {
@@ -41,6 +43,10 @@ class Home extends Component {
                 }
             });
     }
+    logout = () => {
+        this.props.logout();
+        this.props.history.push("/login");
+    };
     render() {
         return (
             <div className="center">
@@ -87,6 +93,9 @@ class Home extends Component {
                         >
                             업로드
                         </Button>
+                        <div className="logoutDiv">
+                            <Button onClick={this.logout}>로그아웃</Button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,9 +103,20 @@ class Home extends Component {
     }
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => {
+            return dispatch(logout());
+        }
+    };
+};
+
 const mapStateToProps = state => {
     return {
         store: state
     };
 };
-export default connect(mapStateToProps)(Home);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);
