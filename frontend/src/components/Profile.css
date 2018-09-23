@@ -1,6 +1,4 @@
-.profile_image {
-    vertical-align: middle;
-    width: 112px;
-    height: 112px;
-    border-radius: 100%;
+.center .profile {
+    padding-bottom: 80px;
+    padding-top: 80px;
 }
