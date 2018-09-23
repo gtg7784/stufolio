@@ -1,14 +1,17 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-from imagekit.models import ProcessedImageField
+from imagekit.models import ImageSpecField
+from imagekit.processors import Thumbnail
 
 
 class Image(models.Model):
-    image = ProcessedImageField(
-        upload_to='static/uploaded/images/%Y/%m/%d/',
+    image = models.ImageField(upload_to='static/uploaded/images/%Y/%m/%d/', )
+    thumbnail = ImageSpecField(
+        source='image',
+        processors=[Thumbnail(100, 100)],
         format='JPEG',
-        options={'quality': 70})
+        options={'quality': 60})
 
 
 class Article(models.Model):
