@@ -33,7 +33,15 @@ class Article extends Component {
     };
     renderPictures = images_id => {
         const pictures = images_id.map(picture => {
-            return <Image src={URL + "articles/images/" + picture + "/"} />;
+            return (
+                <Image
+                    onClick={() => {
+                        window.location.href =
+                            URL + "articles/images/" + picture + "/";
+                    }}
+                    src={URL + "articles/images/" + picture + "/"}
+                />
+            );
         });
         return pictures;
     };
