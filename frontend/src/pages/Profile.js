@@ -220,7 +220,12 @@ class Profile extends Component {
         var date = new Date();
         var lastMonth;
         if (date.getMonth === 1) {
-            lastMonth = date.getFullYear() + "/" + 12 + "/" + date.getDate();
+            lastMonth =
+                date.getFullYear() +
+                "/" +
+                12 +
+                "/" +
+                (date.getDate() - date.getDay() - 2);
         } else {
             lastMonth =
                 date.getFullYear() +
