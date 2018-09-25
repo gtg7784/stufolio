@@ -11,9 +11,11 @@ class Profile extends Component {
         return (
             <div>
                 <Card>
-                    <div className="center profile">
+                    <div>
                         {this.state.isError ? (
-                            <Icon name="user" size="huge" />
+                            <div className="center profile">
+                                <Icon name="user" size="huge" />
+                            </div>
                         ) : (
                             <Image
                                 src={this.props.img_source}
