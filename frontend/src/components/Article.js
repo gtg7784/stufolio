@@ -32,14 +32,16 @@ class Article extends Component {
         return tagsWithIcon;
     };
     renderPictures = images_id => {
+        let i = -1;
         const pictures = images_id.map(picture => {
+            i++;
             return (
                 <Image
+                    key={i}
                     onClick={() => {
-                        window.location.href =
-                            URL + "articles/images/" + picture + "/";
+                        window.open(URL + "articles/images/" + picture + "/");
                     }}
-                    src={URL + "articles/images/" + picture + "/"}
+                    src={URL + "articles/images/thumbnail/" + picture + "/"}
                 />
             );
         });

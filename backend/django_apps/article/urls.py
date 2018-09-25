@@ -3,6 +3,7 @@ from django_apps.article import views
 
 urlpatterns = [
     url(r'^pages/(?P<pk>[0-9]+)/$', views.get_articles_page),
+    url(r'^images/thumbnail/(?P<pk>[0-9]+)/$', views.image_thumbnail),
     url(r'^images/(?P<pk>[0-9]+)/$', views.image),
     url(r'^images/$', views.create_image),
     url(r'^user/(?P<string>[\w\-]+)/$', views.article_profile),
