@@ -1,0 +1,13 @@
+.header_w_buttons {
+    font-size: 2rem;
+    padding: 1.2rem;
+    text-align: center;
+    font-weight: 300;
+    width: 100%;
+    position: absolute;
+    top: 0%;
+}
+
+.headertext {
+    font-size: 3rem;
+}
