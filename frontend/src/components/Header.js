@@ -1,5 +1,4 @@
 import React from "react";
-import { Button, Icon } from "semantic-ui-react";
 
 import "components/Header.css";
 import "pages/Template.css";
