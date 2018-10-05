@@ -9,7 +9,6 @@ import "pages/Template.css";
 import {
     Profile as ProfileComponent,
     PictureThumbnail,
-    ProfileManager,
     Article
 } from "components";
 import { logout } from "modules/account";
@@ -112,77 +111,22 @@ class Profile extends Component {
         });
         return articles;
     };
+    // 렌더링 관련 함수들
 
-    handleImageChange = event => {
-        let file = event.target.files[0];
-        this.setState({
-            ...this.state,
-            image: file,
-            image_url: URL.createObjectURL(file)
-        });
+    moveToUploadPage = () => {
+        this.props.history.push("/upload/");
     };
-    handleBioInputValueChange = event => {
-        this.setState({
-            ...this.state,
-            bio_input_value: event.target.value
-        });
+    moveToMyProfilePage = () => {
+        this.props.history.push("/users/" + this.props.store.status.username);
     };
-    handleSchoolInputValueChange = event => {
-        this.setState({
-            ...this.state,
-            school_input_value: event.target.value
-        });
+    moveToSearchPage = () => {
+        this.props.history.articlesDateValuepush("/search/");
     };
-    handleOnSubmit = event => {
-        event.preventDefault();
-        let formData = new FormData();
-        if (this.state.image !== undefined)
-            formData.append("image", this.state.image);
-        if (this.state.bio_input_value !== "")
-            formData.append("bio", this.state.bio_input_value);
-        if (this.state.school_input_value !== "")
-            formData.append("school", this.state.school_input_value);
-
-        fetch(API_URL + "profiles/", {
-            method: "PATCH",
-            headers: {
-                Authorization: this.props.store.status.auth
-            },
-            body: formData
-        })
-            .then(response => response.json())
-            .then(json => {
-                this.setState({
-                    ...this.state,
-                    bio: json.bio,
-                    school: json.school
-                });
-            });
+    logout = () => {
+        this.props.logout();
+        this.props.history.push("/login");
     };
-    handleUsernameInputValueChange = event => {
-        this.setState({
-            ...this.state,
-            username_input_value: event.target.value
-        });
-    };
-    onChangeUsername = event => {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append("username", this.state.username_input_value);
-        fetch(API_URL + "profiles/change/username/", {
-            method: "POST",
-            headers: {
-                Authorization: this.props.store.status.auth
-            },
-            body: formData
-        })
-            .then(response => response.json())
-            .then(json => {
-                // 사용자 이름 변경됨
-                this.props.logout();
-                this.props.history.push("/");
-            });
-    };
+    // 헤더의 작업을 위한 함수들
 
     makeDateValues = allJsonArticles => {
         let dateValueArray = [];
@@ -236,16 +180,6 @@ class Profile extends Component {
         }
         return (
             <div>
-                {this.state.isUserOwn ? (
-                    <ProfileManager
-                        onSubmit={this.handleOnSubmit}
-                        onUsernameChange={this.handleUsernameInputValueChange}
-                        onChangeUsername={this.onChangeUsername}
-                        onImageChange={this.handleImageChange}
-                        onBioChange={this.handleBioInputValueChange}
-                        onSchoolChange={this.handleSchoolInputValueChange}
-                    />
-                ) : null}
                 {this.state._renderPicture}
                 <div className="center">
                     <ProfileComponent
