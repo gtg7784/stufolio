@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Icon } from "semantic-ui-react";
+import { Button, Icon, Responsive, Segment } from "semantic-ui-react";
+import CalendarHeatmap from "react-calendar-heatmap";
+import "react-calendar-heatmap/dist/styles.css";
 
 import { URL } from "config";
 import { logout } from "modules/account";
-
 import { Profile, Header } from "components";
-
-import CalendarHeatmap from "react-calendar-heatmap";
-import "react-calendar-heatmap/dist/styles.css";
 
 import "pages/Template.css";
 import "pages/Home.css";
@@ -82,6 +80,9 @@ class Home extends Component {
             articlesDateValue: data
         });
     };
+    getMilliSecondsOfDay(day) {
+        return day * 24 * 60 * 60 * 1000; // days * hours * minutes * seconds * milliseconds
+    }
 
     constructor(props) {
         super(props);
@@ -120,10 +121,6 @@ class Home extends Component {
                     });
                 }
             });
-    }
-
-    getMilliSecondsOfDay(day) {
-        return day * 24 * 60 * 60 * 1000; // days * hours * minutes * seconds * milliseconds
     }
 
     render() {
