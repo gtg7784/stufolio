@@ -1,25 +1,27 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Button, Icon, Responsive } from "semantic-ui-react";
 import CalendarHeatmap from "react-calendar-heatmap";
-
 import "react-calendar-heatmap/dist/styles.css";
 
-import "pages/Template.css";
-
+import { URL as API_URL } from "config";
+import { logout } from "modules/account";
 import {
     Profile as ProfileComponent,
     PictureThumbnail,
-    Article
+    Article,
+    Header
 } from "components";
-import { logout } from "modules/account";
-import { URL as API_URL } from "config";
+
+import "pages/Template.css";
 
 class Profile extends Component {
     state = {
-        isUserOwn: false,
-        articlesDateValue: [],
         bio: "",
         school: "",
+        articlesDateValue: undefined,
+        dayStroke: 0,
+        isUserOwn: false,
         image_url: "",
         image: undefined,
         bio_input_value: "",
@@ -27,8 +29,11 @@ class Profile extends Component {
         username_input_value: "",
         allJsonArticles: undefined
     };
-    constructor(props) {
-        super(props);
+
+    componentWillMount() {
+        if (this.props.store.login.status !== "SUCCESS") {
+            this.props.history.push("/login");
+        }
         fetch(
             API_URL + "articles/user/" + this.props.store.status.username + "/",
             {
@@ -51,8 +56,7 @@ class Profile extends Component {
                     this.makeDateValues(json);
                 }
             }); //게시글 목록 받아오기
-
-        fetch(API_URL + "profiles/" + this.props.match.params.user + "/", {
+        fetch(API_URL + "profiles/" + this.props.store.status.username + "/", {
             method: "GET"
         })
             .then(response => response.json())
@@ -61,13 +65,10 @@ class Profile extends Component {
                     this.setState({
                         ...this.state,
                         bio: json.bio,
-                        school: json.school,
-                        isUserOwn:
-                            this.props.store.status.username ===
-                            this.props.match.params.user
+                        school: json.school
                     });
                 }
-            });
+            }); // 프로필 받아오기
     }
     _renderPicture = () => {
         return (
@@ -116,8 +117,8 @@ class Profile extends Component {
     moveToUploadPage = () => {
         this.props.history.push("/upload/");
     };
-    moveToMyProfilePage = () => {
-        this.props.history.push("/users/" + this.props.store.status.username);
+    moveDefaultPage = () => {
+        this.props.history.push("/");
     };
     moveToSearchPage = () => {
         this.props.history.articlesDateValuepush("/search/");
@@ -129,78 +130,132 @@ class Profile extends Component {
     // 헤더의 작업을 위한 함수들
 
     makeDateValues = allJsonArticles => {
-        let dateValueArray = [];
-        let countValueArray = [];
-        let i;
-        for (i = 0; i < allJsonArticles.length; i++) {
-            const raw_datetime = allJsonArticles[i].created_at;
-            const datetime = raw_datetime.split("T");
-            // 날짜는 오름차순으로 받음
+        let dateValueArray = []; // 날짜 정보에 대한 모든 내용이 담기는 array
+        let data = [];
+        for (let i = 0; i < allJsonArticles.length; i++) {
+            const raw_datetime = allJsonArticles[i].created_at; // <날짜>T<시간> 형식
+            const datetime = raw_datetime.split("T"); // 날짜를 얻기 위해 T를 기준으로 나눔
             if (dateValueArray[dateValueArray.length - 1] !== datetime[0]) {
-                // 전것과 다르면 새로운 종류이므로 추가
-                countValueArray.push(1);
-                dateValueArray.push(datetime[0]);
+                // 전것과 날짜가 다르면 다른 날짜이므로 추가
+                data.push({
+                    date: datetime[0],
+                    count: 1
+                });
             } else {
-                countValueArray[dateValueArray.length - 1]++;
+                // 전것과 같다면 같은 날짜이므로 count 횟수만 추가
+                data[data.length - 1] = {
+                    ...data,
+                    count: data[data.length - 1].count + 1
+                };
             }
         }
-        let data = [];
-        for (i = 0; i < dateValueArray.length; i++) {
-            data.push({
-                date: dateValueArray[i],
-                count: countValueArray[i]
-            });
+        let date = new Date();
+        for (var dayStroke = 0; dayStroke < data.length; dayStroke++) {
+            let dataDate = new Date(data[dayStroke].date);
+            let targetDate = new Date(
+                date.getTime() - this.getMilliSecondsOfDay(dayStroke)
+            );
+            let dataDateString =
+                dataDate.getFullYear() +
+                "-" +
+                (dataDate.getMonth() + 1) +
+                "-" +
+                dataDate.getDate();
+            let targetDateString =
+                targetDate.getFullYear() +
+                "-" +
+                (targetDate.getMonth() + 1) +
+                "-" +
+                targetDate.getDate();
+            if (dataDateString !== targetDateString) {
+                break;
+            }
         }
         this.setState({
             ...this.state,
+            dayStroke: dayStroke,
             articlesDateValue: data
         });
     };
-    handleClick = value => {
-        if (value !== null) alert(value.date + ": " + value.count + "개");
-    };
+    getMilliSecondsOfDay(day) {
+        return day * 24 * 60 * 60 * 1000; // days * hours * minutes * seconds * milliseconds
+    }
 
     render() {
         var date = new Date();
-        var lastMonth;
-        if (date.getMonth === 1) {
-            lastMonth =
-                date.getFullYear() +
-                "/" +
-                12 +
-                "/" +
-                (date.getDate() - date.getDay() - 2);
-        } else {
-            lastMonth =
-                date.getFullYear() +
-                "/" +
-                (date.getMonth() - 1) +
-                "/" +
-                (date.getDate() - date.getDay() - 2);
-        }
+        var lastYear = new Date(
+            date.getTime() -
+                this.getMilliSecondsOfDay(365 / 2 + date.getDay() - 1)
+        );
+
         return (
             <div>
-                {this.state._renderPicture}
-                <div className="center">
-                    <ProfileComponent
-                        username={this.props.match.params.user}
-                        img_source={
-                            API_URL +
-                            "profiles/image/" +
-                            this.props.match.params.user +
-                            "/"
-                        }
-                        school={this.state.school}
-                        bio={this.state.bio}
-                    />
-                </div>
-                <CalendarHeatmap
-                    startDate={new Date(lastMonth)}
-                    endDate={date}
-                    onClick={this.handleClick}
-                    horizontal={false}
-                    values={this.state.articlesDateValue}
+                <Header
+                    profileButton={
+                        <Button
+                            inverted
+                            floated="left"
+                            icon
+                            size="big"
+                            onClick={this.moveDefaultPage}
+                        >
+                            <Icon color="black" name="list" />
+                        </Button>
+                    }
+                    searchButton={
+                        <Button
+                            inverted
+                            floated="right"
+                            icon
+                            size="big"
+                            onClick={this.moveToSearchPage}
+                        >
+                            <Icon color="black" name="search" />
+                        </Button>
+                    }
+                    logoutButton={
+                        <Button floated="right" onClick={this.logout}>
+                            로그아웃
+                        </Button>
+                    }
                 />
+                {this.state.articlesDateValue ? (
+                    <div className="belowheader">
+                        <ProfileComponent
+                            username={this.props.store.status.username}
+                            imgSource={
+                                API_URL +
+                                "profiles/image/" +
+                                this.props.store.status.username +
+                                "/"
+                            }
+                            calendarHeatMap={
+                                <CalendarHeatmap
+                                    startDate={lastYear}
+                                    endDate={date}
+                                    values={this.state.articlesDateValue}
+                                />
+                            }
+                            school={this.state.school}
+                            bio={this.state.bio}
+                            classForValue={value => {
+                                if (!value) {
+                                    return "color-empty";
+                                }
+                                return `color-scale-${value.count}`;
+                            }}
+                            dayStroke={this.state.dayStroke}
+                        />
+                    </div>
+                ) : null}
+                <Responsive maxWidth={768} style={{ marginTop: "2rem" }}>
+                    <CalendarHeatmap
+                        horizontal={false}
+                        startDate={lastYear}
+                        endDate={date}
+                        values={this.state.articlesDateValue}
+                    />
+                </Responsive>
                 <br />
                 {this.state.allJsonArticles ? this._renderArticles() : null}
             </div>
