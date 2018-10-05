@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Icon, Responsive, Segment } from "semantic-ui-react";
+import { Button, Icon } from "semantic-ui-react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 
@@ -18,6 +18,44 @@ class Home extends Component {
         articlesDateValue: undefined,
         dayStroke: 0
     };
+    componentWillMount() {
+        if (this.props.store.login.status !== "SUCCESS") {
+            this.props.history.push("/login");
+        }
+        fetch(URL + "articles/user/" + this.props.store.status.username + "/", {
+            method: "GET"
+        })
+            .then(response => {
+                if (response.status === 404) {
+                    this.props.history.push("/");
+                    return undefined;
+                }
+                return response.json();
+            })
+            .then(json => {
+                if (json !== undefined) {
+                    this.setState({
+                        ...this.state,
+                        allJsonArticles: json.reverse()
+                    });
+                    this.makeDateValues(json);
+                }
+            }); //게시글 목록 받아오기
+        fetch(URL + "profiles/" + this.props.store.status.username + "/", {
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json !== undefined) {
+                    this.setState({
+                        ...this.state,
+                        bio: json.bio,
+                        school: json.school
+                    });
+                }
+            }); // 프로필 받아오기
+    }
+
     moveToUploadPage = () => {
         this.props.history.push("/upload/");
     };
@@ -31,6 +69,7 @@ class Home extends Component {
         this.props.logout();
         this.props.history.push("/login");
     };
+    // 헤더의 작업을 위한 함수들
 
     makeDateValues = allJsonArticles => {
         let dateValueArray = []; // 날짜 정보에 대한 모든 내용이 담기는 array
@@ -84,44 +123,9 @@ class Home extends Component {
         return day * 24 * 60 * 60 * 1000; // days * hours * minutes * seconds * milliseconds
     }
 
-    constructor(props) {
-        super(props);
-        if (props.store.login.status !== "SUCCESS") {
-            props.history.push("/login");
-        }
-        fetch(URL + "articles/user/" + props.store.status.username + "/", {
-            method: "GET"
-        })
-            .then(response => {
-                if (response.status === 404) {
-                    props.history.push("/");
-                    return undefined;
-                }
-                return response.json();
-            })
-            .then(json => {
-                if (json !== undefined) {
-                    this.setState({
-                        ...this.state,
-                        allJsonArticles: json.reverse()
-                    });
-                    this.makeDateValues(json);
-                }
-            }); //게시글 목록 받아오기
-        fetch(URL + "profiles/" + this.props.store.status.username + "/", {
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(json => {
-                if (json !== undefined) {
-                    this.setState({
-                        ...this.state,
-                        bio: json.bio,
-                        school: json.school
-                    });
-                }
-            });
-    }
+    handleClick = value => {
+        if (value !== null) alert(value.date + ": " + value.count + "개");
+    };
 
     render() {
         var date = new Date();
