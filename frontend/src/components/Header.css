@@ -1,6 +1,6 @@
 .header_w_buttons {
     font-size: 2rem;
-    padding: 1.2rem;
+    padding: 1rem;
     text-align: center;
     font-weight: 300;
     width: 100%;
@@ -9,5 +9,5 @@
 }
 
 .headertext {
-    font-size: 3rem;
+    font-size: 2rem;
 }
