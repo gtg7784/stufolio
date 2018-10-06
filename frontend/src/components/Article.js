@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Button, Icon, Image, Card } from "semantic-ui-react";
+import {
+    Label,
+    Button,
+    Icon,
+    Image,
+    Segment,
+    LabelDetail
+} from "semantic-ui-react";
 
 import { URL } from "config";
 
@@ -31,22 +38,6 @@ class Article extends Component {
         });
         return tagsWithIcon;
     };
-    renderPictures = images_id => {
-        let i = -1;
-        const pictures = images_id.map(picture => {
-            i++;
-            return (
-                <Image
-                    key={i}
-                    onClick={() => {
-                        window.open(URL + "articles/images/" + picture + "/");
-                    }}
-                    src={URL + "articles/images/thumbnail/" + picture + "/"}
-                />
-            );
-        });
-        return pictures;
-    };
 
     onClickHeart = () => {
         fetch(URL + "articles/" + this.props.article_id + "/heart/", {
@@ -69,46 +60,71 @@ class Article extends Component {
 
     render() {
         return (
-            <div className="center">
-                <div className="article">
-                    <Card>
-                        {this.props.images_id
-                            ? this.renderPictures(this.props.images_id)
-                            : null}
-                        <Card.Content>
-                            <Card.Description>
-                                {this.props.tags
-                                    ? this.renderTags(this.props.tags)
-                                    : null}
-                            </Card.Description>
-                            <Card.Meta>{this.props.writer}</Card.Meta>
-                            <span>
-                                좋아요: {this.state.numOfHearts}
-                                <br />
-                                {this.props.date}
-                                {this.state.isHeart ? (
-                                    <Button floated="right" inverted icon>
-                                        <Icon
-                                            size="large"
-                                            name="heart"
-                                            color="red"
-                                            onClick={this.onClickHeart}
-                                        />
-                                    </Button>
-                                ) : (
-                                    <Button floated="right" inverted icon>
-                                        <Icon
-                                            color="black"
-                                            size="large"
-                                            name="heart outline"
-                                            onClick={this.onClickHeart}
-                                        />
-                                    </Button>
-                                )}
-                            </span>
-                        </Card.Content>
-                    </Card>
-                </div>
+            <div style={{ width: "400px" }} className="article">
+                <span>
+                    <Segment size="large" onClick={this.props.movePageFunc}>
+                        <Segment textAlign="center">
+                            {this.props.images_id ? (
+                                <Image
+                                    onClick={() => {
+                                        window.open(
+                                            URL +
+                                                "articles/images/" +
+                                                this.props.images_id[0] +
+                                                "/"
+                                        );
+                                    }}
+                                    src={
+                                        URL +
+                                        "articles/images/thumbnail/" +
+                                        this.props.images_id[0] +
+                                        "/"
+                                    }
+                                />
+                            ) : null}
+                            {this.props.images_id.length > 1
+                                ? "그 외" +
+                                  this.props.images_id.length -
+                                  2 +
+                                  "개의이미지"
+                                : null}
+                        </Segment>
+                        <Segment textAlign="center">
+                            {this.props.tags
+                                ? this.renderTags(this.props.tags)
+                                : null}
+                        </Segment>
+                        <Segment textAlign="center">
+                            {this.props.writer}
+                        </Segment>
+                        <Segment>{this.props.date}</Segment>
+                        <span>
+                            {this.state.isHeart ? (
+                                <Label
+                                    as="a"
+                                    onClick={this.onClickHeart}
+                                    size="large"
+                                >
+                                    <Icon name="heart" color="red" />
+                                    <Label.Detail>
+                                        {this.state.numOfHearts}
+                                    </Label.Detail>
+                                </Label>
+                            ) : (
+                                <Label
+                                    as="a"
+                                    onClick={this.onClickHeart}
+                                    size="large"
+                                >
+                                    <Icon color="black" name="heart outline" />
+                                    <Label.Detail>
+                                        {this.state.numOfHearts}
+                                    </Label.Detail>
+                                </Label>
+                            )}
+                        </span>
+                    </Segment>
+                </span>
             </div>
         );
     }

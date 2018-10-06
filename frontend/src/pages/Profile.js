@@ -13,6 +13,7 @@ import {
     Header
 } from "components";
 
+import "pages/Profile.css";
 import "pages/Template.css";
 
 class Profile extends Component {
@@ -98,6 +99,10 @@ class Profile extends Component {
             i++;
             return (
                 <Article
+                    movePageFunc={() => {
+                        this.props.history.push("/article/" + article.id);
+                    }}
+                    style={{ display: "inline" }}
                     key={i}
                     numOfHearts={article.heart_user_set.length}
                     writer={article.writer}
@@ -249,15 +254,19 @@ class Profile extends Component {
                     </div>
                 ) : null}
                 <Responsive maxWidth={768} style={{ marginTop: "2rem" }}>
-                    <CalendarHeatmap
-                        horizontal={false}
-                        startDate={lastYear}
-                        endDate={date}
-                        values={this.state.articlesDateValue}
-                    />
+                    {this.state.articlesDateValue ? (
+                        <CalendarHeatmap
+                            horizontal={false}
+                            startDate={lastYear}
+                            endDate={date}
+                            values={this.state.articlesDateValue}
+                        />
+                    ) : null}
                 </Responsive>
                 <br />
-                {this.state.allJsonArticles ? this._renderArticles() : null}
+                <span className="articles">
+                    {this.state.allJsonArticles ? this._renderArticles() : null}
+                </span>
             </div>
         );
     }
