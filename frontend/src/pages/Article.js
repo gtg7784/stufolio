@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ImageGallery from "react-image-gallery";
-import { Label, Icon, Image, Segment } from "semantic-ui-react";
-
-import { Article as ArticleComponent } from "components";
+import { Label, Icon, Segment } from "semantic-ui-react";
 import { URL } from "config";
 
 import "react-image-gallery/styles/css/image-gallery.css";
