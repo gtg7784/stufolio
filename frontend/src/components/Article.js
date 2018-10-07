@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-    Label,
-    Button,
-    Icon,
-    Image,
-    Segment,
-    LabelDetail
-} from "semantic-ui-react";
+import { Label, Icon, Image, Segment } from "semantic-ui-react";
 
 import { URL } from "config";
 
@@ -62,42 +55,50 @@ class Article extends Component {
         return (
             <div style={{ width: "400px" }} className="article">
                 <span>
-                    <Segment size="large" onClick={this.props.movePageFunc}>
+                    <Segment size="large">
                         <Segment textAlign="center">
-                            {this.props.images_id ? (
+                            {this.props.imagesId ? (
                                 <Image
                                     onClick={() => {
                                         window.open(
                                             URL +
                                                 "articles/images/" +
-                                                this.props.images_id[0] +
+                                                this.props.imagesId[0] +
                                                 "/"
                                         );
                                     }}
                                     src={
                                         URL +
                                         "articles/images/thumbnail/" +
-                                        this.props.images_id[0] +
+                                        this.props.imagesId[0] +
                                         "/"
                                     }
                                 />
                             ) : null}
-                            {this.props.images_id.length > 1
+                            {this.props.imagesId.length > 1
                                 ? "그 외" +
-                                  this.props.images_id.length -
+                                  this.props.imagesId.length -
                                   2 +
                                   "개의이미지"
                                 : null}
                         </Segment>
-                        <Segment textAlign="center">
+                        <Segment
+                            textAlign="center"
+                            onClick={this.props.movePageFunc}
+                        >
                             {this.props.tags
                                 ? this.renderTags(this.props.tags)
                                 : null}
                         </Segment>
-                        <Segment textAlign="center">
+                        <Segment
+                            textAlign="center"
+                            onClick={this.props.movePageFunc}
+                        >
                             {this.props.writer}
                         </Segment>
-                        <Segment>{this.props.date}</Segment>
+                        <Segment onClick={this.props.movePageFunc}>
+                            {this.props.date}
+                        </Segment>
                         <span>
                             {this.state.isHeart ? (
                                 <Label

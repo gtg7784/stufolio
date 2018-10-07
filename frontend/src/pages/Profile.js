@@ -107,7 +107,7 @@ class Profile extends Component {
                     numOfHearts={article.heart_user_set.length}
                     writer={article.writer}
                     tags={article.tags}
-                    images_id={article.images_id}
+                    imagesId={article.images_id}
                     date={datetimeString}
                     isHeart={isHeart}
                     article_id={article.id}
