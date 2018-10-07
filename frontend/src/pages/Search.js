@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { Input, Button, Icon, Loader } from "semantic-ui-react";
-import { Article } from "components";
+import { Article, Header } from "components";
 import { URL } from "config";
 
 import "pages/Template.css";
@@ -73,9 +73,39 @@ class Search extends Component {
         });
     };
 
+    moveToDefaultPage = () => {
+        this.props.history.push("/");
+    };
+    logout = () => {
+        this.props.logout();
+        this.props.history.push("/login");
+    };
+    // 헤더의 작업을 위한 함수들
+
     render() {
         return (
             <div>
+                <Header
+                    profileButton={
+                        <Button
+                            inverted
+                            floated="left"
+                            icon
+                            size="big"
+                            onClick={this.moveToDefaultPage}
+                        >
+                            <Icon color="black" name="home" />
+                        </Button>
+                    }
+                    searchButton={
+                        null
+                    }
+                    logoutButton={
+                        <Button floated="right" onClick={this.logout}>
+                            로그아웃
+                        </Button>
+                    }
+                />
                 <div className="center">
                     <form onSubmit={this.searchArticles}>
                         <Input
