@@ -35,12 +35,9 @@ class Profile extends Component {
         if (this.props.store.login.status !== "SUCCESS") {
             this.props.history.push("/login");
         }
-        fetch(
-            API_URL + "articles/user/" + this.props.store.status.username + "/",
-            {
-                method: "GET"
-            }
-        )
+        fetch(API_URL + "articles/user/" + this.props.match.params.user + "/", {
+            method: "GET"
+        })
             .then(response => {
                 if (response.status === 404) {
                     this.props.history.push("/");
@@ -57,7 +54,7 @@ class Profile extends Component {
                     this.makeDateValues(json);
                 }
             }); //게시글 목록 받아오기
-        fetch(API_URL + "profiles/" + this.props.store.status.username + "/", {
+        fetch(API_URL + "profiles/" + this.props.match.params.user + "/", {
             method: "GET"
         })
             .then(response => response.json())
@@ -119,9 +116,6 @@ class Profile extends Component {
     };
     // 렌더링 관련 함수들
 
-    moveToUploadPage = () => {
-        this.props.history.push("/upload/");
-    };
     moveDefaultPage = () => {
         this.props.history.push("/");
     };
@@ -204,7 +198,7 @@ class Profile extends Component {
                             size="big"
                             onClick={this.moveDefaultPage}
                         >
-                            <Icon color="black" name="list" />
+                            <Icon color="black" name="home" />
                         </Button>
                     }
                     searchButton={
@@ -227,11 +221,11 @@ class Profile extends Component {
                 {this.state.articlesDateValue ? (
                     <div className="belowheader">
                         <ProfileComponent
-                            username={this.props.store.status.username}
+                            username={this.props.match.params.user}
                             imgSource={
                                 API_URL +
                                 "profiles/image/" +
-                                this.props.store.status.username +
+                                this.props.match.params.user +
                                 "/"
                             }
                             calendarHeatMap={
