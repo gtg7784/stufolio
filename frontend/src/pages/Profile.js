@@ -126,7 +126,7 @@ class Profile extends Component {
         this.props.history.push("/");
     };
     moveToSearchPage = () => {
-        this.props.history.articlesDateValuepush("/search/");
+        this.props.history.push("/search/");
     };
     logout = () => {
         this.props.logout();

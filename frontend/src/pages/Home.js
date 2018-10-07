@@ -63,7 +63,7 @@ class Home extends Component {
         this.props.history.push("/users/" + this.props.store.status.username);
     };
     moveToSearchPage = () => {
-        this.props.history.articlesDateValuepush("/search/");
+        this.props.history.push("/search/");
     };
     logout = () => {
         this.props.logout();
