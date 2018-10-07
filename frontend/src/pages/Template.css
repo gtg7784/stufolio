@@ -4,6 +4,19 @@
     justify-content: center;
     text-align: center;
 }
+.autoline {
+    word-wrap: break-word;
+    margin-left: 20px;
+    align-content: stretch;
+    word-break: break-all;
+}
+.belowheader {
+    padding-top: 5rem;
+}
 #upload_button {
     margin-top: 100px;
 }
+.react-calendar-heatmap .color-scale-1 { fill: #d6e685; }
+.react-calendar-heatmap .color-scale-2 { fill: #8cc665; }
+.react-calendar-heatmap .color-scale-3 { fill: #44a340; }
+.react-calendar-heatmap .color-scale-4 { fill: #1e6823; }
