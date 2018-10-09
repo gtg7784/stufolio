@@ -245,18 +245,30 @@ class Profile extends Component {
                             }}
                             dayStroke={this.state.dayStroke}
                         />
+                        <Responsive
+                            maxWidth={768}
+                            style={{ marginTop: "2rem" }}
+                        >
+                            <CalendarHeatmap
+                                horizontal={false}
+                                startDate={lastYear}
+                                endDate={date}
+                                values={this.state.articlesDateValue}
+                            />
+                        </Responsive>
                     </div>
                 ) : null}
-                <Responsive maxWidth={768} style={{ marginTop: "2rem" }}>
-                    {this.state.articlesDateValue ? (
-                        <CalendarHeatmap
-                            horizontal={false}
-                            startDate={lastYear}
-                            endDate={date}
-                            values={this.state.articlesDateValue}
-                        />
-                    ) : null}
-                </Responsive>
+
+                {this.props.match.params.user ===
+                this.props.store.status.username ? (
+                    <Button
+                        onClick={() => {
+                            this.props.history.push("/profile");
+                        }}
+                    >
+                        프로필 변경
+                    </Button>
+                ) : null}
                 <br />
                 <span className="articles">
                     {this.state.allJsonArticles ? this._renderArticles() : null}
