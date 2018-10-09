@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/kim-yeon-gyu-exlock/Stufolio-backend.svg?token=C9c6EYbhcpTHYEouUSeB&branch=master)](https://travis-ci.com/kim-yeon-gyu-exlock/Stufolio-backend)<br/>
+[![Build Status](https://travis-ci.com/kim-yeon-gyu-exlock/stufolio.svg?token=C9c6EYbhcpTHYEouUSeB&branch=master)](https://travis-ci.com/kim-yeon-gyu-exlock/stufolio)
 
 # 학생들을 위한 포트폴리오 서비스 : Stufolio
 
