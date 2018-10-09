@@ -97,16 +97,14 @@ class Search extends Component {
                             <Icon color="black" name="home" />
                         </Button>
                     }
-                    searchButton={
-                        null
-                    }
+                    searchButton={null}
                     logoutButton={
                         <Button floated="right" onClick={this.logout}>
                             로그아웃
                         </Button>
                     }
                 />
-                <div className="center">
+                <div className="belowheader center">
                     <form onSubmit={this.searchArticles}>
                         <Input
                             type="text"
