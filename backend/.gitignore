@@ -11,6 +11,7 @@ __pycache__/
 .secrets/
 test.jpg
 static/uploaded/
+CACHE/
 
 # Database
 migrations/
