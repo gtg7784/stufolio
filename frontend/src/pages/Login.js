@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { TransitionablePortal, Segment } from "semantic-ui-react";
+import { TransitionablePortal, Segment, Button } from "semantic-ui-react";
 
 import { SignIn } from "components";
 import { login, loginSuccess, loginFailure } from "modules/account";
@@ -116,7 +116,7 @@ class Login extends Component {
     render() {
         return (
             <div className="center">
-                <div className="content">
+                <div className="login content">
                     <SignIn
                         onSubmit={this.handleLogin}
                         onIdChange={this.handleInputId}
@@ -125,6 +125,13 @@ class Login extends Component {
                         onFacebookResponse={this.handleSocialLogin}
                     />
                 </div>
+                <Button
+                    onClick={() => {
+                        this.props.history.push("/register/");
+                    }}
+                >
+                    회원 가입
+                </Button>
                 <TransitionablePortal open={this.state.isOpen}>
                     <Segment
                         style={{
