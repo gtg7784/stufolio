@@ -56,14 +56,16 @@ class ArticleDetail(generics.RetrieveUpdateAPIView):
 
 @api_view(['POST'])
 def create_image(request):
-    serializer = ImageSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {
-                "id": serializer.data['id']
-            }, status=status.HTTP_201_CREATED)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    if request.user.is_authenticated:
+        serializer = ImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "id": serializer.data['id']
+                }, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -87,11 +89,9 @@ def image(request, pk):  # 이미지 반환
 @api_view(['GET'])
 def image_thumbnail(request, pk):  # 이미지 반환
 
-
     test_file = open(
         unquote(settings.BASE_DIR + "/" +
-                    str(get_object_or_404(Image, pk=pk).thumbnail.url)),
-        'rb')
+                str(get_object_or_404(Image, pk=pk).thumbnail.url)), 'rb')
     return HttpResponse(
         content=test_file,
         content_type="image/jpeg",
