@@ -7,3 +7,5 @@
 
 Back-End에서는 Django를 사용합니다. <br/>
 Front-End에서는 ReactJS와 Webpack을 사용합니다.<br/>
+
+업로드된 코드의 빌드 버전은 조만간 추가 예정입니다.<br/>
