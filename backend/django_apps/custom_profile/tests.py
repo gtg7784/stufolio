@@ -1,5 +1,4 @@
 from urllib.parse import urlencode, quote_plus
-
 from django.test import TestCase, Client
 
 

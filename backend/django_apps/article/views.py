@@ -1,8 +1,13 @@
+"""
+Views 파일은 Article 앱의 실제로 "보이는" 부분을 담당하는 파일입니다.
+따라서, 다음과 같은 내용들이 포함되어있습니다:
+이미지, 하트, 게시글 업로드 및 조회, 작성자별 게시글 조회
+"""
+
 import json
 from urllib.parse import unquote
 
 from django.http import Http404, JsonResponse, HttpResponse
-from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 

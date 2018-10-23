@@ -1,3 +1,7 @@
+"""
+프로필의 모델을 설정하는, 즉 DB Column을 나누고 필드를 만드는 등의 설정을 하는 파일
+"""
+
 from django.db import models
 from django.conf import settings
 from imagekit.models import ProcessedImageField
