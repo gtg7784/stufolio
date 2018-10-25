@@ -130,7 +130,7 @@ class Profile extends Component {
 
     makeDateValues = allJsonArticles => {
         let dateValueArray = []; // 날짜 정보에 대한 모든 내용이 담기는 array
-        let data = [];
+        let data = []; //날짜, 게시글 작성횟수가 있는 데이터가 담기는 array
         for (let i = 0; i < allJsonArticles.length; i++) {
             const raw_datetime = allJsonArticles[i].created_at; // <날짜>T<시간> 형식
             const datetime = raw_datetime.split("T"); // 날짜를 얻기 위해 T를 기준으로 나눔
@@ -148,33 +148,42 @@ class Profile extends Component {
                 };
             }
         }
-        let date = new Date();
+
         for (var dayStroke = 0; dayStroke < data.length; dayStroke++) {
+            // 당일 부터 하루 하루 늘려 나감.
             let dataDate = new Date(data[dayStroke].date);
             let targetDate = new Date(
-                date.getTime() - this.getMilliSecondsOfDay(dayStroke)
+                new Date().getTime() - this.getMilliSecondsOfDay(dayStroke)
+                // 당일 - 0 다음 루프로 넘어가면, 당일 - 1
             );
-            let dataDateString =
+            const dataDateString =
                 dataDate.getFullYear() +
                 "-" +
-                (dataDate.getMonth() + 1) +
+                dataDate.getMonth() +
                 "-" +
                 dataDate.getDate();
-            let targetDateString =
+            //data의 날짜를 string으로 바꿈
+
+            const targetDateString =
                 targetDate.getFullYear() +
                 "-" +
-                (targetDate.getMonth() + 1) +
+                targetDate.getMonth() +
                 "-" +
                 targetDate.getDate();
+            //비교 할 날짜를 string으로 바꿈
+
             if (dataDateString !== targetDateString) {
                 break;
             }
         }
+        // 몇일 연속으로 했는지
+
         this.setState({
             ...this.state,
             dayStroke: dayStroke,
             articlesDateValue: data
         });
+        //state에 값 지정
     };
     getMilliSecondsOfDay(day) {
         return day * 24 * 60 * 60 * 1000; // days * hours * minutes * seconds * milliseconds

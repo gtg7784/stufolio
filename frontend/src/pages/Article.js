@@ -1,3 +1,7 @@
+/*
+하나의 게시글을 담당하는 페이지
+*/
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ImageGallery from "react-image-gallery";
@@ -19,11 +23,13 @@ class Article extends Component {
     };
     componentWillMount() {
         fetch(URL + "articles/" + this.props.match.params.id + "/", {
+            // 게시글을 얻기위해 backend 서버로 요청을 보냄
             method: "GET"
         })
             .then(response => {
                 if (response.status === 404) {
-                    this.props.history.push("/");
+                    // 만약 존재하지 않는 게시글 일 경우 (404 == not found)
+                    this.props.history.push("/"); // 초기 페이지로 보낸다.
                 } else {
                     return response.json();
                 }
@@ -44,8 +50,10 @@ class Article extends Component {
                     numOfHearts: json.heart_user_set.length,
                     id: json.id
                 });
+                // 게시글 정보에 따라 state 지정
                 const images = [];
                 for (let i = 0; i < json.images_id.length; i++) {
+                    // 이미지 개수만큼 images array에 추가
                     images.push({
                         original:
                             URL +
@@ -62,24 +70,26 @@ class Article extends Component {
                 this.setState({
                     ...this.state,
                     images: images
-                });
+                }); // 이미지들을 state의 images 항목으로 지정
             });
-    }
+    } // 컴포넌트가 로드되기 직전에
     _renderTags = tags => {
-        let i = -1;
+        let i = 0;
         const tagsWithIcon = tags.map(tag => {
-            i++;
-            return (
+            let hash = (
                 <span key={i}>
                     <Icon name="hashtag" />
                     {tag}
                 </span>
             );
+            i++;
+            return hash;
         });
         return tagsWithIcon;
     };
     onClickHeart = () => {
         fetch(URL + "articles/" + this.props.match.params.id + "/heart/", {
+            // 해당하는 게시글의 id에 heart 요청을 보냄
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -94,19 +104,19 @@ class Article extends Component {
                     isHeart: isHeart,
                     numOfHearts: json.like_count
                 });
+                // 하트를 눌렀는지의 여부와 하트의 개수를 서버에서 반환받은 값에 따라 변경
             });
     };
 
     render() {
-        console.log(this.props.store.status.auth);
         return (
             <div>
                 <div>
                     <span>
                         <Segment size="massive">
                             <Segment textAlign="center">
-                                {this.state.imagesId ? (
-                                    <ImageGallery items={this.state.images} />
+                                {this.state.imagesId ? ( // 이미지들의 값이 state에 지정되었을 경우에만
+                                    <ImageGallery items={this.state.images} /> // 사진 로드
                                 ) : null}
                             </Segment>
                             <Segment textAlign="center">

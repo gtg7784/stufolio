@@ -21,8 +21,9 @@ class Home extends Component {
     componentWillMount() {
         if (this.props.store.login.status !== "SUCCESS") {
             this.props.history.push("/login");
-        }
+        } //로그인 전용 페이지이므로, 로그인 되어있지 않을경우 로그인 페이지로 이동
         fetch(URL + "articles/user/" + this.props.store.status.username + "/", {
+            // 로그인 한 유저의 게시글 목록을 요청함 (달력 그래프를 그리기 위해서임)
             method: "GET"
         })
             .then(response => {
@@ -69,11 +70,11 @@ class Home extends Component {
         this.props.logout();
         this.props.history.push("/login");
     };
-    // 헤더의 작업을 위한 함수들
+    // 헤더의 버튼 액션을 위한 함수들
 
     makeDateValues = allJsonArticles => {
         let dateValueArray = []; // 날짜 정보에 대한 모든 내용이 담기는 array
-        let data = [];
+        let data = []; //날짜, 게시글 작성횟수가 있는 데이터가 담기는 array
         for (let i = 0; i < allJsonArticles.length; i++) {
             const raw_datetime = allJsonArticles[i].created_at; // <날짜>T<시간> 형식
             const datetime = raw_datetime.split("T"); // 날짜를 얻기 위해 T를 기준으로 나눔
@@ -91,33 +92,42 @@ class Home extends Component {
                 };
             }
         }
-        let date = new Date();
+
         for (var dayStroke = 0; dayStroke < data.length; dayStroke++) {
+            // 당일 부터 하루 하루 늘려 나감.
             let dataDate = new Date(data[dayStroke].date);
             let targetDate = new Date(
-                date.getTime() - this.getMilliSecondsOfDay(dayStroke)
+                new Date().getTime() - this.getMilliSecondsOfDay(dayStroke)
+                // 당일 - 0 다음 루프로 넘어가면, 당일 - 1
             );
-            let dataDateString =
+            const dataDateString =
                 dataDate.getFullYear() +
                 "-" +
-                (dataDate.getMonth() + 1) +
+                dataDate.getMonth() +
                 "-" +
                 dataDate.getDate();
-            let targetDateString =
+            //data의 날짜를 string으로 바꿈
+
+            const targetDateString =
                 targetDate.getFullYear() +
                 "-" +
-                (targetDate.getMonth() + 1) +
+                targetDate.getMonth() +
                 "-" +
                 targetDate.getDate();
+            //비교 할 날짜를 string으로 바꿈
+
             if (dataDateString !== targetDateString) {
                 break;
             }
         }
+        // 몇일 연속으로 했는지
+
         this.setState({
             ...this.state,
             dayStroke: dayStroke,
             articlesDateValue: data
         });
+        //state에 값 지정
     };
     getMilliSecondsOfDay(day) {
         return day * 24 * 60 * 60 * 1000; // days * hours * minutes * seconds * milliseconds
@@ -131,7 +141,7 @@ class Home extends Component {
         var date = new Date();
         var lastYear = new Date(
             date.getTime() -
-                this.getMilliSecondsOfDay(365 / 2 + date.getDay() - 1)
+                this.getMilliSecondsOfDay(365 / 2 + date.getDay() - 1) // 6개월 전 부터 달력 그래프를 그림
         );
 
         return (
