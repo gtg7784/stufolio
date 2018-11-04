@@ -40,7 +40,9 @@ class Register extends Component {
                     this.state.input_value_password2
             }).then(response => {
                 if (response.status === 201) {
-                    this.showPopup("회원가입 성공. 오류방지를 위하여 사용자 이름에서 .(점) 문자는 제거됩니다.");
+                    this.showPopup(
+                        "회원가입 성공. 오류방지를 위하여 사용자 이름에서 .(점) 문자는 제거됩니다."
+                    );
                     setTimeout(() => {
                         this.props.history.push("/login");
                     }, 1000);
@@ -57,8 +59,7 @@ class Register extends Component {
         });
     };
     handleInputUsername = event => {
-        let username = event.target.value.replace(/[.]/g, '') // api 서버에 .이 있는 닉네임으로 프로필 요청시 에러 발생하므로 막음
-        console.log(this.state.input_value_username)
+        let username = event.target.value.replace(/[.]/g, ""); // api 서버에 .이 있는 닉네임으로 프로필 요청시 에러 발생하므로 막음
         this.setState({
             ...this.state,
             input_value_username: username
