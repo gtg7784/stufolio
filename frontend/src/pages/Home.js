@@ -61,14 +61,16 @@ class Home extends Component {
         this.props.history.push("/upload/");
     };
     moveToMyProfilePage = () => {
-        this.props.history.push("/users/" + this.props.store.status.username);
+        this.props.history.push(
+            "/users/" + this.props.store.status.username + "/"
+        );
     };
     moveToSearchPage = () => {
         this.props.history.push("/search/");
     };
     logout = () => {
         this.props.logout();
-        this.props.history.push("/login");
+        this.props.history.push("/login/");
     };
     // 헤더의 버튼 액션을 위한 함수들
 
