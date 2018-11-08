@@ -21,40 +21,45 @@ class Home extends Component {
     componentWillMount() {
         if (this.props.store.login.status !== "SUCCESS") {
             this.props.history.push("/login");
-        } //로그인 전용 페이지이므로, 로그인 되어있지 않을경우 로그인 페이지로 이동
-        fetch(URL + "articles/user/" + this.props.store.status.username + "/", {
-            // 로그인 한 유저의 게시글 목록을 요청함 (달력 그래프를 그리기 위해서임)
-            method: "GET"
-        })
-            .then(response => {
-                if (response.status === 404) {
-                    this.props.history.push("/");
-                    return undefined;
+        } else {
+            //로그인 전용 페이지이므로, 로그인 되어있지 않을경우 로그인 페이지로 이동
+            fetch(
+                URL + "articles/user/" + this.props.store.status.username + "/",
+                {
+                    // 로그인 한 유저의 게시글 목록을 요청함 (달력 그래프를 그리기 위해서임)
+                    method: "GET"
                 }
-                return response.json();
+            )
+                .then(response => {
+                    if (response.status === 404) {
+                        this.props.history.push("/");
+                        return undefined;
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    if (json !== undefined) {
+                        this.setState({
+                            ...this.state,
+                            allJsonArticles: json.reverse()
+                        });
+                        this.makeDateValues(json);
+                    }
+                }); //게시글 목록 받아오기
+            fetch(URL + "profiles/" + this.props.store.status.username + "/", {
+                method: "GET"
             })
-            .then(json => {
-                if (json !== undefined) {
-                    this.setState({
-                        ...this.state,
-                        allJsonArticles: json.reverse()
-                    });
-                    this.makeDateValues(json);
-                }
-            }); //게시글 목록 받아오기
-        fetch(URL + "profiles/" + this.props.store.status.username + "/", {
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(json => {
-                if (json !== undefined) {
-                    this.setState({
-                        ...this.state,
-                        bio: json.bio,
-                        school: json.school
-                    });
-                }
-            }); // 프로필 받아오기
+                .then(response => response.json())
+                .then(json => {
+                    if (json !== undefined) {
+                        this.setState({
+                            ...this.state,
+                            bio: json.bio,
+                            school: json.school
+                        });
+                    }
+                }); // 프로필 받아오기
+        }
     }
 
     moveToUploadPage = () => {
