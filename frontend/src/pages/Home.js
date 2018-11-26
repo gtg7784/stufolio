@@ -225,6 +225,15 @@ class Home extends Component {
                         </Button>
                     </div>
                 </div>
+                <p>
+                    본 웹앱의 애니메이션은{" "}
+                    <a href="http://anicollection.github.io/#/bouncing_entrances/bounceIn">
+                        이곳
+                    </a>
+                    의 도움을 받았습니다. 또한 아이콘은{" "}
+                    <a href="https://fontawesome.com/">FontAwesome</a>을
+                    사용하였습니다.
+                </p>
             </div>
         );
     }
