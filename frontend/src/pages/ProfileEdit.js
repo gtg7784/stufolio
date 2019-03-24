@@ -78,7 +78,7 @@ class ProfileEdit extends Component {
                     profileButton={
                         <Button
                             inverted
-                            floated="left"
+                            floated="right"
                             icon
                             size="big"
                             onClick={this.moveDefaultPage}
@@ -98,7 +98,7 @@ class ProfileEdit extends Component {
                         </Button>
                     }
                     logoutButton={
-                        <Button floated="right" onClick={this.logout}>
+                        <Button floated="right" size="big" onClick={this.logout}>
                             로그아웃
                         </Button>
                     }

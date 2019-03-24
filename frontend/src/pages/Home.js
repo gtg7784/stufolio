@@ -157,8 +157,8 @@ class Home extends Component {
                     profileButton={
                         <Button
                             inverted
-                            floated="left"
                             icon
+                            floated="right"
                             size="big"
                             onClick={this.moveToMyProfilePage}
                         >
@@ -168,8 +168,8 @@ class Home extends Component {
                     searchButton={
                         <Button
                             inverted
-                            floated="right"
                             icon
+                            floated="right"
                             size="big"
                             onClick={this.moveToSearchPage}
                         >
@@ -177,7 +177,7 @@ class Home extends Component {
                         </Button>
                     }
                     logoutButton={
-                        <Button floated="right" onClick={this.logout}>
+                        <Button floated="right" size="big" onClick={this.logout}>
                             로그아웃
                         </Button>
                     }

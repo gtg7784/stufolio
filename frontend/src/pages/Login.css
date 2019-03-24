@@ -1,3 +1,14 @@
-.login .content {
-    padding: 100px;
+.loginContent {
+  position: absolute;
+  margin-top: 200px;
+}
+
+.introduction {
+  width: 100%;
+  margin-top: 10px;
+  position: absolute;
+}
+
+.register {
+  margin-top: 300px;
 }

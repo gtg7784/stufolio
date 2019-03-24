@@ -1,4 +1,11 @@
 .wideprofile {
-    margin-right: 2rem;
-    width: 100%;
+  margin-right: 2rem;
+  width: 100%;
+}
+
+.profileImage {
+  height: 140px;
+  width: 216px;
+  text-align: center;
+  padding-top: 10px;
 }

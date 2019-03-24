@@ -6,10 +6,11 @@ import "pages/Template.css";
 function componentName({ profileButton, searchButton, logoutButton }) {
     return (
         <div className="header_w_buttons">
-            {profileButton}
             <span className="headertext">STUFOLIO</span>
             {logoutButton}
+            {profileButton}
             {searchButton}
+            
         </div>
     );
 }
