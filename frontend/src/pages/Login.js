@@ -91,6 +91,7 @@ class Login extends Component {
           <p>
             이제, Stufolio에서 공부한 내용을 기록하며 몇일이나 노력했는지
     확인하며 공부해봐요.</p>
+		<p>데모용 계정: demo_purposes / demonstration1234</p>
         </div><div className = 'loginContent'><
         SignIn
     onSubmit = {this.handleLogin} onIdChange =
